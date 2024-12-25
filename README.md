@@ -41,6 +41,9 @@ Displays when the player fails to complete the game within the allotted time or 
 
 
 
+
+
+
 Installation
 
 Prerequisites
@@ -66,6 +69,8 @@ cd rokue-like-game
 # Run the project (if using command line)
 javac -d bin src/**/*.java
 java -cp bin org.firstgame.Main
+
+
 
 
 
