@@ -20,6 +20,8 @@ public abstract class Monster extends GameObject {
         return health;
     }
 
+
+    
     // Setter for health
     public void setHealth(int health) {
         this.health = health;
