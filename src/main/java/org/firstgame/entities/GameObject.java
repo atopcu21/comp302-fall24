@@ -1,91 +1,181 @@
 package org.firstgame.entities;
 
+import org.firstgame.RokueLikeGame;
 import org.firstgame.properties.Rotation;
 import org.firstgame.properties.WorldPosition;
 
-public abstract class GameObject {
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-    // Position of the game object in the game world
+public class GameObject {
     private WorldPosition worldPosition;
-
-    // Rotation of the game object
     private Rotation rotation;
-
-    // The direction the game object is facing
     private Rotation facingDirection;
-
-    // Scale factor for the game object
-    private double scale;
-
-    // Sprite image representing the game object
+    private double scaleX;
+    private double scaleY;
     private String sprite;
+    private double width;
+    private double height;
+    private boolean hasRune;
+    private boolean canHaveRuneInIt;
+    private boolean isColliding;
 
-    // Default constructor initializing default values
     public GameObject() {
-        this.worldPosition = new WorldPosition(0, 0); // Default position at (0, 0)
-        this.rotation = new Rotation(0); // No rotation initially
-        this.scale = 1; // Default scale of 1
-        this.sprite = ""; // No sprite assigned initially
+        this.worldPosition = new WorldPosition(0,0);
+        this.rotation = new Rotation(0);
+        this.scaleX = 1;
+        this.scaleY = 1;
+        this.sprite = "";
+        this.width = 0;
+        this.height = 0;
     }
 
-    // Constructor to initialize the game object with a specific position
     public GameObject(WorldPosition worldPosition) {
         this.worldPosition = worldPosition;
     }
 
-    // Get the current position of the game object
+    public GameObject(WorldPosition worldPosition, String sprite) {
+        this.worldPosition = worldPosition;
+        setSprite(sprite);
+        canHaveRuneInIt = true;
+    }
+
     public WorldPosition getPosition() {
         return worldPosition;
     }
 
-    // Set the position of the game object
     public void setPosition(WorldPosition worldPosition) {
         this.worldPosition = worldPosition;
     }
 
-    // Set the position of the game object using x and y coordinates
     public void setPosition(double x, double y) {
         this.worldPosition.setX(x);
         this.worldPosition.setY(y);
     }
 
-    // Get the current scale of the game object
-    public double getScale() {
-        return scale;
+    public double getScaleX() {
+        return scaleX;
     }
 
-    // Set the scale of the game object
-    public void setScale(double scale) {
-        this.scale = scale;
+    public double getScaleY() {
+        return scaleY;
     }
 
-    // Get the current rotation of the game object
+    public void setScale(double scaleX, double scaleY) {
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+    }
+
     public Rotation getRotation() {
         return rotation;
     }
 
-    // Set the rotation of the game object
     public void setRotation(Rotation rotation) {
         this.rotation = rotation;
     }
 
-    // Get the sprite image of the game object
     public String getSprite() {
         return sprite;
     }
 
-    // Set the sprite image of the game object
     public void setSprite(String sprite) {
-        this.sprite = sprite;
+        try {
+            this.sprite = sprite;
+            BufferedImage img = ImageIO.read(new File(sprite));
+            this.width = img.getWidth() * 1.3;
+            this.height = img.getHeight() * 1.3;
+        } catch (IOException e) {
+            // ignored
+        }
     }
 
-    // Get the direction the game object is facing
     public Rotation getFacingDirection() {
         return facingDirection;
     }
 
-    // Set the direction the game object is facing
     public void setFacingDirection(Rotation facingDirection) {
         this.facingDirection = facingDirection;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    public void move(Rotation rotation) {
+
+    }
+
+    public void onCollusion(GameObject otherObject) {
+        if(otherObject.isColliding) return;
+        otherObject.setColliding(true);
+        double x = this.getPosition().getX() - otherObject.getPosition().getX();
+        double y = this.getPosition().getY() - otherObject.getPosition().getY();
+        if(x == 0) {
+            x += 0.0000000001;
+        } else if(y == 0) {
+            y += 0.0000000001;
+        }
+        double len = Math.sqrt((x * x) + (y * y));
+        double norX = x / len;
+        double norY = y / len;
+        double theta;
+        theta = Math.toDegrees(Math.atan2(norX, norY));
+        if(Math.abs(norY) < Math.abs(norX)) {
+            if(theta <= 180) {
+                theta += 180;
+            } else {
+                theta = theta - 180;
+            }
+        }
+        otherObject.move(new Rotation(theta));
+        otherObject.setColliding(false);
+    }
+
+    public boolean hasRune() {
+        return hasRune;
+    }
+
+    public void setHasRune(boolean hasRune) {
+        this.hasRune = hasRune;
+    }
+
+    public boolean canHaveRuneInIt() {
+        return canHaveRuneInIt;
+    }
+
+    public void setCanHaveRuneInIt(boolean canHaveRuneInIt) {
+        this.canHaveRuneInIt = canHaveRuneInIt;
+    }
+
+    public void checkForCollisions() {
+        for (GameObject gameObject : RokueLikeGame.getInstance().getGameObjects()) {
+            double minX = gameObject.getPosition().getX() - (gameObject.getWidth() / 88);
+            double minY = gameObject.getPosition().getY() - (gameObject.getHeight() / 88);
+            double maxX = gameObject.getPosition().getX() + (gameObject.getWidth() / 88);
+            double maxY = gameObject.getPosition().getY() + (gameObject.getHeight() / 88);
+            if(getPosition().getX() > minX && getPosition().getX() < maxX && getPosition().getY() > minY && getPosition().getY() < maxY) {
+                if(!(gameObject.equals(this))){
+                    gameObject.onCollusion(this);
+                }
+            }
+        }
+    }
+
+    public void setColliding(boolean isColliding) {
+        this.isColliding = isColliding;
     }
 }
