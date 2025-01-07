@@ -25,8 +25,8 @@ public class Player extends GameObject {
     }
 
     public void move(Rotation rotation){
-        double deltaX = Math.sin(Math.toRadians(rotation.getAngle())) / 44;
-        double deltaY = Math.cos(Math.toRadians(rotation.getAngle())) / 44;
+        double deltaX = Math.sin(Math.toRadians(rotation.getAngle())) / 22;
+        double deltaY = Math.cos(Math.toRadians(rotation.getAngle())) / 22;
         setRotation(rotation);
         updatePosition(deltaX, -deltaY);
         checkForCollisions();
