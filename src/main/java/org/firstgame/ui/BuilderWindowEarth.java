@@ -45,6 +45,25 @@ public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMo
         levelLabel.setLayout(new FlowLayout());
         levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
         levelLabel.setForeground(Color.WHITE);
+        JButton randomlyFillButton = new JButton("Random");
+        randomlyFillButton.setBounds(1050, 600, 200, 60);
+        randomlyFillButton.setFocusPainted(false);
+        randomlyFillButton.setBackground(Color.DARK_GRAY);
+        randomlyFillButton.setForeground(new Color(30, 5, 30));
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/java/org/firstgame/fonts/custom_font.ttf")).deriveFont(28f);
+            randomlyFillButton.setFont(customFont);
+        } catch (FontFormatException | IOException e) {
+            randomlyFillButton.setFont(new Font("Arial", Font.BOLD, 28));
+        }
+        randomlyFillButton.addActionListener(e -> randomlyFill());
+        this.add(randomlyFillButton);
+
+
+
+
+
+        
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/java/org/firstgame/fonts/custom_font.ttf")).deriveFont(14f);
             levelLabel.setFont(customFont);
@@ -76,6 +95,12 @@ public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMo
         BufferedImage wallLeft = null;
         BufferedImage wallRight = null;
         BufferedImage nextButton = null;
+        BufferedImage skull = null;
+
+        // Load new images
+
+        BufferedImage chest_t1 = null;
+        BufferedImage chest_t2 = null;
         try {
             chest = ImageIO.read(new File(BUILD_CHEST_SPRITE));
             wallUp = ImageIO.read(new File(WALL_UP_SPRITE));
@@ -86,16 +111,27 @@ public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMo
             doubleBox = ImageIO.read(new File(BUILD_BOX_DOUBLE_SPRITE));
             smallBox = ImageIO.read(new File(BUILD_BOX_SMALL_SPRITE));
             nextButton = ImageIO.read(new File(NEXT_BUTTON_SPRITE));
+
+
+            //chest t1 t2 here
+
+
+            chest_t1 = ImageIO.read(new File("src/main/java/org/firstgame/assets/chest-t1.png"));
+            chest_t2 = ImageIO.read(new File("src/main/java/org/firstgame/assets/chest-t2.png"));
+            skull = ImageIO.read(new File("src/main/java/org/firstgame/assets/skull.png"));
         } catch (Exception e){
             // ignored
         }
 
         g.drawImage(chest, 900, 125, null);
         g.drawImage(column, 947, 200, null);
-        g.drawImage(doubleBox, 947, 300, null);
-        g.drawImage(smallBox, 947, 400, null);
+        g.drawImage(doubleBox, 947, 275, null);
+        g.drawImage(smallBox, 947, 350, null);
+        g.drawImage(chest_t1, 947, 425, null);
+        g.drawImage(chest_t2, 947, 475, null);
+        g.drawImage(skull, 947, 525, null);
         for (int i = 0; i < 12; i++){
-            g.drawImage(wallUp, (i * 44) + 250, 100, null);
+            g.drawImage(wallUp, (i * 44) +250, 100, null);
             g.drawImage(wallDown, (i * 44) + 250, 628, null);
             g.drawImage(wallLeft, 250, (i * 44) + 100, null);
             g.drawImage(wallRight, 769, (i * 44) + 100, null);
@@ -150,10 +186,16 @@ public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMo
         if (clickPoint.x >= 947 && clickPoint.x <= 947 + 44) {
             if (clickPoint.y >= 200 && clickPoint.y <= 200 + 44) {
                 currentItem = new GameObject(new WorldPosition(0, 0), BUILD_COLUMN_SPRITE);
-            } else if (clickPoint.y >= 300 && clickPoint.y <= 300 + 44) {
+            } else if (clickPoint.y >= 300 && clickPoint.y <= 275 + 44) {
                 currentItem = new GameObject(new WorldPosition(0, 0), BUILD_BOX_DOUBLE_SPRITE);
-            } else if (clickPoint.y >= 400 && clickPoint.y <= 400 + 44) {
+            } else if (clickPoint.y >= 400 && clickPoint.y <= 350 + 44) {
                 currentItem = new GameObject(new WorldPosition(0, 0), BUILD_BOX_SMALL_SPRITE);
+            } else if (clickPoint.y >= 500 && clickPoint.y <= 425 + 44) {
+                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/chest-t1.png");
+            } else if (clickPoint.y >= 550 && clickPoint.y <= 475 + 44) {
+                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/chest-t2.png");
+            } else if (clickPoint.y >= 600 && clickPoint.y <= 525 + 44) {
+                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/skull.png");
             }
         } else {
             if (currentItem != null && isInsideWalls(clickPoint)) {
@@ -199,5 +241,17 @@ public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMo
         if(currentItem != null) {
             currentItem.setPosition(screenPositionToWorldPosition(new ScreenPosition(e.getX(), e.getY())));
         }
+    }
+
+    private void randomlyFill() {
+        String[] options = {BUILD_COLUMN_SPRITE, BUILD_BOX_DOUBLE_SPRITE, BUILD_BOX_SMALL_SPRITE, "src/main/java/org/firstgame/assets/chest-t1.png", "src/main/java/org/firstgame/assets/chest-t2.png", "src/main/java/org/firstgame/assets/skull.png"};
+        Random random = new Random();
+        placedObjects.clear(); // Clear existing objects if needed
+        for (int i = 0; i < 6; i++) {
+            String selectedSprite = options[random.nextInt(options.length)];
+            GameObject gameObject = new GameObject(new WorldPosition(i+1, i), selectedSprite);
+            placedObjects.add(gameObject);
+        }
+        repaint();
     }
 }
