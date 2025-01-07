@@ -26,4 +26,12 @@ public class Constants {
 
     public static final double WORLD_MARGIN_X = 4;
     public static final double WORLD_MARGIN_Y = 2;
+
+
+
+
+    //key R
+
+
+    public static final Integer KEY_R = 82;
 }
