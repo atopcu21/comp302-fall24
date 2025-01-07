@@ -69,4 +69,9 @@ public class MainMenu extends JPanel {
     private void showHelpDialog() {
         JOptionPane.showMessageDialog(this, "Instructions:\nUse Arrow keys to move your hero.\nClick on object to find runes.\nYou can collect power-ups as you go.", "Help", JOptionPane.INFORMATION_MESSAGE);
     }
+
+    public void changeBackgroundColor(Color color) {
+        setBackground(color);
+        repaint();
+    }
 }
