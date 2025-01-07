@@ -45,6 +45,21 @@ public class BuilderWindowAir extends JPanel implements MouseListener, MouseMoti
         levelLabel.setLayout(new FlowLayout());
         levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
         levelLabel.setForeground(Color.WHITE);
+
+        JButton randomlyFillButton = new JButton("Randomly Fill");
+        randomlyFillButton.setBounds(947, 500, 200, 60);
+        randomlyFillButton.setFocusPainted(false);
+        randomlyFillButton.setBackground(Color.DARK_GRAY);
+        randomlyFillButton.setForeground(new Color(30, 5, 30));
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/java/org/firstgame/fonts/custom_font.ttf")).deriveFont(28f);
+            randomlyFillButton.setFont(customFont);
+        } catch (FontFormatException | IOException e) {
+            randomlyFillButton.setFont(new Font("Arial", Font.BOLD, 28));
+        }
+        randomlyFillButton.addActionListener(e -> randomlyFill());
+        this.add(randomlyFillButton);
+        
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/java/org/firstgame/fonts/custom_font.ttf")).deriveFont(14f);
             levelLabel.setFont(customFont);
@@ -199,5 +214,16 @@ public class BuilderWindowAir extends JPanel implements MouseListener, MouseMoti
         if(currentItem != null) {
             currentItem.setPosition(screenPositionToWorldPosition(new ScreenPosition(e.getX(), e.getY())));
         }
+    }
+    private void randomlyFill() {
+        String[] options = {BUILD_COLUMN_SPRITE, BUILD_BOX_DOUBLE_SPRITE, BUILD_BOX_SMALL_SPRITE};
+        Random random = new Random();
+        placedObjects.clear(); // Clear existing objects if needed
+        for (int i = 0; i < 9; i++) {
+            String selectedSprite = options[random.nextInt(options.length)];
+            GameObject gameObject = new GameObject(new WorldPosition(i+1, i), selectedSprite);
+            placedObjects.add(gameObject);
+        }
+        repaint(); // Repaint to show the result
     }
 }
