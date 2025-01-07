@@ -54,11 +54,16 @@ public class RokueLikeGame {
 
     }
 
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+
     public void initGame(){
         isGameOver = false;
         initGameWindow();
         initGameTimer();
         initGameObjects();
+        gameWindow.setBackgroundColor(new Color(34, 139, 34)); // Green for Earth
     }
 
     public void initGameWindow(){
