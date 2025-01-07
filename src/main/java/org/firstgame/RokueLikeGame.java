@@ -4,11 +4,14 @@ import org.firstgame.entities.*;
 import org.firstgame.properties.Rotation;
 import org.firstgame.ui.GameWindow;
 
+import java.awt.Color;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.swing.JOptionPane;
 
 import static org.firstgame.properties.Constants.*;
 
@@ -199,6 +202,7 @@ public class RokueLikeGame {
         }
         gameWindow.stopTimer();
     }
+    private long lastRKeyPressTime = 0;
 
     public void movePlayer() {
         if(activeKeys.isEmpty()){
@@ -214,6 +218,15 @@ public class RokueLikeGame {
                 player.move(Rotation.UP);
             } else if (activeKeys.contains(KEY_DOWN_ARROW_CODE)) {
                 player.move(Rotation.DOWN);
+            } else if (activeKeys.contains(KEY_R)) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastRKeyPressTime >= 1000) { // 1 second interval
+                    // Message box that says "r is pressed"
+                    
+                    
+                    gameWindow.changeRuneHighlight();
+                    lastRKeyPressTime = currentTime;
+                }
             }
         } else if (activeKeys.size() == 2) {
             if (activeKeys.contains(KEY_LEFT_ARROW_CODE) && activeKeys.contains(KEY_UP_ARROW_CODE)) {
@@ -238,9 +251,18 @@ public class RokueLikeGame {
 
     public void winGame() {
         switch (currentLevel) {
-            case "Earth" -> currentLevel = "Air";
-            case "Air" -> currentLevel = "Water";
-            case "Water" -> currentLevel = "Fire";
+            case "Earth" -> {
+                currentLevel = "Air";
+                gameWindow.setBackgroundColor(new Color(135, 206, 235)); // Light blue for Air
+            }
+            case "Air" -> {
+                currentLevel = "Water";
+                gameWindow.setBackgroundColor(new Color(0, 0, 255)); // Blue for Water
+            }
+            case "Water" -> {
+                currentLevel = "Fire";
+                gameWindow.setBackgroundColor(new Color(255, 69, 0)); // Orange-Red for Fire
+            }
             default -> {
                 return;
             }
