@@ -1,13 +1,12 @@
 package org.firstgame.ui;
 
-import org.firstgame.RokueLikeGame;
-import org.firstgame.entities.GameObject;
-import org.firstgame.properties.ScreenPosition;
-import org.firstgame.properties.WorldPosition;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -18,7 +17,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.firstgame.properties.Constants.*;
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import org.firstgame.RokueLikeGame;
+import org.firstgame.entities.GameObject;
+import static org.firstgame.properties.Constants.BUILD_BOX_DOUBLE_SPRITE;
+import static org.firstgame.properties.Constants.BUILD_BOX_SMALL_SPRITE;
+import static org.firstgame.properties.Constants.BUILD_CHEST_SPRITE;
+import static org.firstgame.properties.Constants.BUILD_COLUMN_SPRITE;
+import static org.firstgame.properties.Constants.PLAY_BUTTON_SPRITE;
+import static org.firstgame.properties.Constants.WALL_DOWN_SPRITE;
+import static org.firstgame.properties.Constants.WALL_LEFT_SPRITE;
+import static org.firstgame.properties.Constants.WALL_RIGHT_SPRITE;
+import static org.firstgame.properties.Constants.WALL_UP_SPRITE;
+import static org.firstgame.properties.Constants.WORLD_MARGIN_X;
+import static org.firstgame.properties.Constants.WORLD_MARGIN_Y;
+import org.firstgame.properties.ScreenPosition;
+import org.firstgame.properties.WorldPosition;
 
 public class BuilderWindowFire extends JPanel implements MouseListener, MouseMotionListener {
     private static BuilderWindowFire instance;
@@ -89,6 +109,10 @@ public class BuilderWindowFire extends JPanel implements MouseListener, MouseMot
         BufferedImage wallLeft = null;
         BufferedImage wallRight = null;
         BufferedImage nextButton = null;
+        BufferedImage skull = null;
+        BufferedImage chest_t1 = null;
+        BufferedImage chest_t2 = null;
+
         try {
             chest = ImageIO.read(new File(BUILD_CHEST_SPRITE));
             wallUp = ImageIO.read(new File(WALL_UP_SPRITE));
@@ -99,6 +123,11 @@ public class BuilderWindowFire extends JPanel implements MouseListener, MouseMot
             doubleBox = ImageIO.read(new File(BUILD_BOX_DOUBLE_SPRITE));
             smallBox = ImageIO.read(new File(BUILD_BOX_SMALL_SPRITE));
             nextButton = ImageIO.read(new File(PLAY_BUTTON_SPRITE));
+            chest_t1 = ImageIO.read(new File("src/main/java/org/firstgame/assets/chest-t1.png"));
+            chest_t2 = ImageIO.read(new File("src/main/java/org/firstgame/assets/chest-t2.png"));
+            skull = ImageIO.read(new File("src/main/java/org/firstgame/assets/skull.png"));
+
+
         } catch (Exception e){
             // ignored
         }
@@ -106,6 +135,10 @@ public class BuilderWindowFire extends JPanel implements MouseListener, MouseMot
         g.drawImage(column, 947, 200, null);
         g.drawImage(doubleBox, 947, 300, null);
         g.drawImage(smallBox, 947, 400, null);
+        g.drawImage(chest_t1, 947, 425, null);
+        g.drawImage(chest_t2, 947, 475, null);
+        g.drawImage(skull, 947, 525, null);
+
         for (int i = 0; i < 12; i++){
             g.drawImage(wallUp, (i * 44) + 250, 100, null);
             g.drawImage(wallDown, (i * 44) + 250, 628, null);
@@ -166,6 +199,12 @@ public class BuilderWindowFire extends JPanel implements MouseListener, MouseMot
                 currentItem = new GameObject(new WorldPosition(0, 0), BUILD_BOX_DOUBLE_SPRITE);
             } else if (clickPoint.y >= 400 && clickPoint.y <= 400 + 44) {
                 currentItem = new GameObject(new WorldPosition(0, 0), BUILD_BOX_SMALL_SPRITE);
+            } else if (clickPoint.y >= 500 && clickPoint.y <= 425 + 44) {
+                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/chest-t1.png");
+            } else if (clickPoint.y >= 550 && clickPoint.y <= 475 + 44) {
+                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/chest-t2.png");
+            } else if (clickPoint.y >= 600 && clickPoint.y <= 525 + 44) {
+                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/skull.png");
             }
         } else {
             if (currentItem != null && isInsideWalls(clickPoint)) {
@@ -213,22 +252,30 @@ public class BuilderWindowFire extends JPanel implements MouseListener, MouseMot
         }
     }
     private void randomlyFill() {
-        String[] options = {BUILD_COLUMN_SPRITE, BUILD_BOX_DOUBLE_SPRITE, BUILD_BOX_SMALL_SPRITE};
+        String[] options = {BUILD_COLUMN_SPRITE, BUILD_BOX_DOUBLE_SPRITE, BUILD_BOX_SMALL_SPRITE, "src/main/java/org/firstgame/assets/chest-t1.png", "src/main/java/org/firstgame/assets/chest-t2.png", "src/main/java/org/firstgame/assets/skull.png"};
         Random random = new Random();
         placedObjects.clear(); // Clear existing objects if needed
+        List<Point> usedPositions = new ArrayList<>(); // Track used positions
+
         for (int i = 0; i < 17; i++) {
             String selectedSprite = options[random.nextInt(options.length)];
-            GameObject gameObject;
-            if (i < 10) {
-                gameObject = new GameObject(new WorldPosition(i + 1, i), selectedSprite);
-            } else if(i < 13) {
-                gameObject = new GameObject(new WorldPosition(i - 1, 12 -i), selectedSprite);
-            }
-            else{
-                gameObject = new GameObject(new WorldPosition(i - 12, -8 +i), selectedSprite);
-            }
+    
+            int randomX, randomY;
+            Point position;
+            do {
+                randomX = random.nextInt(9) + 2; // Random X within the grid (2 to 10)
+                randomY = random.nextInt(9) + 2; // Random Y within the grid (2 to 10)
+                position = new Point(randomX, randomY); // Represent position as a Point
+            } while (usedPositions.contains(position)); // Ensure the position is unique
+    
+            usedPositions.add(position); // Mark position as used
+    
+            GameObject gameObject = new GameObject(new WorldPosition(randomX, randomY), selectedSprite);
             placedObjects.add(gameObject);
         }
-        repaint(); // Repaint to show the result
+        repaint();
     }
+
 }
+
+
