@@ -8,6 +8,13 @@ import org.firstgame.properties.Rotation;
 public class Player extends GameObject {
     private int lives;
     private int score;
+    private boolean hasExtraTime;
+    private boolean hasReveal;
+    private boolean hasCloak;
+    private boolean hasLuringGem;
+
+
+
     private List<GameObject> inventory;
 
     public Player() {
