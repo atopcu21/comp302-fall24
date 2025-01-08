@@ -1,10 +1,9 @@
 package org.firstgame.entities;
 
-import org.firstgame.RokueLikeGame;
+import java.util.List;
+
 import org.firstgame.properties.Constants;
 import org.firstgame.properties.Rotation;
-
-import java.util.List;
 
 public class Player extends GameObject {
     private int lives;
@@ -25,8 +24,8 @@ public class Player extends GameObject {
     }
 
     public void move(Rotation rotation){
-        double deltaX = Math.sin(Math.toRadians(rotation.getAngle())) / 22;
-        double deltaY = Math.cos(Math.toRadians(rotation.getAngle())) / 22;
+        double deltaX = Math.sin(Math.toRadians(rotation.getAngle())) / 27;
+        double deltaY = Math.cos(Math.toRadians(rotation.getAngle())) / 27;
         setRotation(rotation);
         updatePosition(deltaX, -deltaY);
         checkForCollisions();
