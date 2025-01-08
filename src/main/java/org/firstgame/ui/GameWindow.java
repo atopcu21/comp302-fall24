@@ -29,6 +29,11 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
     private boolean runeFound;
     private boolean monstersGenerating;
     private JPanel inventoryPanel;
+    private JPanel inventoryContainer;
+    private JPanel healthPanel;
+    private BufferedImage healthImage;
+
+
 
 
     
@@ -38,12 +43,20 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
     private GameWindow() {
         inventoryPanel = new JPanel();
-        inventoryPanel.setBackground(new Color(60, 60, 60));
+        inventoryPanel.setBackground(new Color(60, 60, 60, 128));
         inventoryPanel.setPreferredSize(new Dimension(320, 420));
         inventoryPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 20)); // Top, left, bottom, right margins
 
-
-
+        healthPanel = new JPanel();
+        healthPanel.setOpaque(false); // Make the health panel transparent
+        inventoryPanel.add(healthPanel, BorderLayout.CENTER);
+        
+        try {
+            healthImage = ImageIO.read(new File("src/main/java/org/firstgame/assets/heart.png")); // Load the health image
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
 
 
 
@@ -52,14 +65,12 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         JFrame frame = new JFrame("Rokue Like Game");
 
 
-        // frame.add(inventoryPanel, BorderLayout.EAST);
-        JPanel inventoryContainer = new JPanel(new BorderLayout());
-        inventoryContainer.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 20)); // Top, left, bottom, right margins
+        inventoryContainer = new JPanel(new BorderLayout());
+        inventoryContainer.setBorder(BorderFactory.createEmptyBorder(80, 0, 80, 100)); // Top, left, bottom, right margins
         inventoryContainer.add(inventoryPanel, BorderLayout.CENTER);
-        
+        inventoryContainer.setBackground(getBackground());
         
         frame.add(inventoryContainer, BorderLayout.EAST);
-
 
 
         frame.add(this);
@@ -209,6 +220,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         checkRuneFound();
         updateTime();
         repaint();
+        updateHealth(RokueLikeGame.getInstance().getPlayer().getLives());
     }
 
     public void checkForCollisions() {
@@ -289,7 +301,11 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         if(gameInstance.getAdventureTime() - timeElapsed <= 0){
             timeLabel.setText("Game Over");
             gameInstance.gameOver();
-        } else timeLabel.setText(gameInstance.getCurrentLevel() + " Hall / Time: " + formatTimeRemaining(gameInstance.getAdventureTime() - timeElapsed));
+        } else{
+            timeLabel.setText(gameInstance.getCurrentLevel() + " Hall / Time: " + formatTimeRemaining(gameInstance.getAdventureTime() - timeElapsed));
+        
+        }
+
     }
 
     public String formatTimeRemaining(long seconds) {
@@ -406,6 +422,18 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
     public void setBackgroundColor(Color color) {
         setBackground(color);
+        if (inventoryContainer != null) {
+            inventoryContainer.setBackground(color);
+        }
         repaint();
+    }
+    public void updateHealth(int lives) {
+        healthPanel.removeAll(); // Clear the existing health images
+        for (int i = 0; i < lives; i++) {
+            JLabel healthLabel = new JLabel(new ImageIcon(healthImage));
+            healthPanel.add(healthLabel);
+        }
+        healthPanel.revalidate();
+        healthPanel.repaint();
     }
 }
