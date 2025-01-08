@@ -8,6 +8,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 
 public class GameObject {
     private WorldPosition worldPosition;
@@ -21,6 +25,10 @@ public class GameObject {
     private boolean hasRune;
     private boolean canHaveRuneInIt;
     private boolean isColliding;
+    
+    private Timer collisionTimer;
+    private boolean canDecreaseLives = true;
+
 
     public GameObject() {
         this.worldPosition = new WorldPosition(0,0);
@@ -120,7 +128,10 @@ public class GameObject {
     }
 
     public void onCollusion(GameObject otherObject) {
-        if(otherObject.isColliding) return;
+        if(otherObject.isColliding){
+
+            return;
+        }
         otherObject.setColliding(true);
         double x = this.getPosition().getX() - otherObject.getPosition().getX();
         double y = this.getPosition().getY() - otherObject.getPosition().getY();
@@ -143,6 +154,42 @@ public class GameObject {
         }
         otherObject.move(new Rotation(theta));
         otherObject.setColliding(false);
+
+        System.out.println("Collision detected between: " + this.getSprite() + " and " + otherObject.getSprite());
+
+
+        // if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/fighter.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+        //     RokueLikeGame.getInstance().getPlayer().decreaseLives();
+        //     System.out.println("Player's health decreased by 1. Current health: " + RokueLikeGame.getInstance().getPlayer().getLives());
+        // }
+
+
+        if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/fighter.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            handlePlayerCollision();
+        } else if (this.getSprite().equals("src/main/java/org/firstgame/assets/fighter.png") && otherObject.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            handlePlayerCollision();
+        }
+    }
+
+    private void handlePlayerCollision() {
+        if (canDecreaseLives) {
+            Player player = RokueLikeGame.getInstance().getPlayer();
+            player.decreaseLives();
+            System.out.println("Player's health decreased by 1. Current health: " + player.getLives());
+            canDecreaseLives = false;
+
+            // Start a timer to reset canDecreaseLives after 1 second
+            if (collisionTimer == null) {
+                collisionTimer = new Timer(1000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        canDecreaseLives = true;
+                    }
+                });
+                collisionTimer.setRepeats(false);
+            }
+            collisionTimer.restart();
+        }
     }
 
     public boolean hasRune() {
@@ -170,8 +217,10 @@ public class GameObject {
             if(getPosition().getX() > minX && getPosition().getX() < maxX && getPosition().getY() > minY && getPosition().getY() < maxY) {
                 if(!(gameObject.equals(this))){
                     gameObject.onCollusion(this);
+                    
                 }
             }
+            
         }
     }
 

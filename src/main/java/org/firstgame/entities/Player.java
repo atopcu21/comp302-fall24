@@ -55,4 +55,12 @@ public class Player extends GameObject {
     public void addToInventory(GameObject item) {
         inventory.add(item);
     }
+    public void decreaseLives() {
+        if (lives > 0) {
+            lives--;
+        }
+    }
+
+
+
 }

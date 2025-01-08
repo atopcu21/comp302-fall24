@@ -48,7 +48,8 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         inventoryPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 20)); // Top, left, bottom, right margins
 
         healthPanel = new JPanel();
-        healthPanel.setOpaque(false); // Make the health panel transparent
+        healthPanel.setOpaque(false); // Make the health panel fully transparent
+        healthPanel.setBackground(new Color(0, 0, 0, 0)); // Ensure no background color
         inventoryPanel.add(healthPanel, BorderLayout.CENTER);
         
         try {
@@ -225,6 +226,8 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
     public void checkForCollisions() {
         for (GameObject gameObject : RokueLikeGame.getInstance().getGameObjects()) {
+
+
             gameObject.checkForCollisions();
         }
     }
