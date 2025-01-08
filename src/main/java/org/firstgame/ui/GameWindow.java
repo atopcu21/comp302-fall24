@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+
 public class GameWindow extends JPanel implements KeyListener, MouseListener {
     private static GameWindow instance;
     private RokueLikeGame gameInstance;
@@ -27,15 +28,40 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
     private long startTime;
     private boolean runeFound;
     private boolean monstersGenerating;
+    private JPanel inventoryPanel;
+
+
     
     //highlight rune here
     
     private boolean highlightRune;
 
     private GameWindow() {
+        inventoryPanel = new JPanel();
+        inventoryPanel.setBackground(new Color(60, 60, 60));
+        inventoryPanel.setPreferredSize(new Dimension(320, 420));
+        inventoryPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 20)); // Top, left, bottom, right margins
+
+
+
+
+
+
         highlightRune = false;
 
         JFrame frame = new JFrame("Rokue Like Game");
+
+
+        // frame.add(inventoryPanel, BorderLayout.EAST);
+        JPanel inventoryContainer = new JPanel(new BorderLayout());
+        inventoryContainer.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 20)); // Top, left, bottom, right margins
+        inventoryContainer.add(inventoryPanel, BorderLayout.CENTER);
+        
+        
+        frame.add(inventoryContainer, BorderLayout.EAST);
+
+
+
         frame.add(this);
         setBackground(new Color(40, 10, 35));
         addKeyListener(this);

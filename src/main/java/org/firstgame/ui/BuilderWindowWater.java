@@ -66,8 +66,8 @@ public class BuilderWindowWater extends JPanel implements MouseListener, MouseMo
         levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
         levelLabel.setForeground(Color.WHITE);
 
-        JButton randomlyFillButton = new JButton("Randomly Fill");
-        randomlyFillButton.setBounds(947, 500, 200, 60);
+        JButton randomlyFillButton = new JButton("Random");
+        randomlyFillButton.setBounds(1050, 600, 200, 60);
         randomlyFillButton.setFocusPainted(false);
         randomlyFillButton.setBackground(Color.DARK_GRAY);
         randomlyFillButton.setForeground(new Color(30, 5, 30));

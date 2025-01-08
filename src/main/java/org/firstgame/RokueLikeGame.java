@@ -259,14 +259,22 @@ public class RokueLikeGame {
             case "Earth" -> {
                 currentLevel = "Air";
                 gameWindow.setBackgroundColor(new Color(135, 206, 235)); // Light blue for Air
+
             }
             case "Air" -> {
                 currentLevel = "Water";
                 gameWindow.setBackgroundColor(new Color(0, 0, 255)); // Blue for Water
+
             }
             case "Water" -> {
                 currentLevel = "Fire";
                 gameWindow.setBackgroundColor(new Color(255, 69, 0)); // Orange-Red for Fire
+
+            }
+            case "Fire" -> {
+                currentLevel = "Finished";
+                JOptionPane.showMessageDialog(gameWindow, "Congratulations! You have won the game!", "Game Won", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
             }
             default -> {
                 return;
