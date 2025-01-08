@@ -94,40 +94,82 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         return instance;
     }
 
+    // @Override
+    // public void paintComponent(Graphics g) {
+    //     super.paintComponent(g);
+    //     if(gameInstance != null) {
+    //         for(GameObject gameObject : gameInstance.getGameObjects()) {
+    //             BufferedImage image = null;
+    //             try {
+    //                 image = ImageIO.read(new File(gameObject.getSprite()));
+    //                 int width = image.getWidth();
+    //                 int height = image.getHeight();
+    //                 BufferedImage bi = new BufferedImage(width, height, image.getType());
+    //                 Graphics2D g2 = bi.createGraphics();
+
+    //                 AffineTransform transform = new AffineTransform();
+
+    //                 if(gameObject.getFacingDirection() == Rotation.LEFT){
+    //                     transform.scale(-1, 1);
+    //                     transform.translate(-width, 0);
+    //                 } else {
+    //                     transform.scale(1, 1);
+    //                 }
+
+    //                 g2.drawImage(image, transform, null);
+
+    //                 if(gameObject.hasRune() && highlightRune == true){
+    //                     bi = increaseBrightness(bi, 50);
+    //                 }
+
+    //                 g.drawImage(bi,
+    //                         worldPositionToScreenPosition(gameObject.getPosition()).x() - image.getWidth(this) / 2,
+    //                         worldPositionToScreenPosition(gameObject.getPosition()).y() - image.getHeight(this) / 2,
+    //                         this);
+    //             } catch (IOException e) {
+    //                 // throw new RuntimeException(e);
+    //             }
+    //         }
+    //     }
+    // }
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if(gameInstance != null) {
-            for(GameObject gameObject : gameInstance.getGameObjects()) {
+        if (gameInstance != null) {
+            for (GameObject gameObject : gameInstance.getGameObjects()) {
                 BufferedImage image = null;
                 try {
                     image = ImageIO.read(new File(gameObject.getSprite()));
                     int width = image.getWidth();
                     int height = image.getHeight();
-                    BufferedImage bi = new BufferedImage(width, height, image.getType());
+                    BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g2 = bi.createGraphics();
-
+    
+                    // Enable transparency
+                    g2.setComposite(AlphaComposite.SrcOver);
+    
                     AffineTransform transform = new AffineTransform();
-
-                    if(gameObject.getFacingDirection() == Rotation.LEFT){
+    
+                    if (gameObject.getFacingDirection() == Rotation.LEFT) {
                         transform.scale(-1, 1);
                         transform.translate(-width, 0);
                     } else {
                         transform.scale(1, 1);
                     }
-
+    
                     g2.drawImage(image, transform, null);
-
-                    if(gameObject.hasRune() && highlightRune == true){
+    
+                    if (gameObject.hasRune() && highlightRune == true) {
                         bi = increaseBrightness(bi, 50);
                     }
-
+    
                     g.drawImage(bi,
                             worldPositionToScreenPosition(gameObject.getPosition()).x() - image.getWidth(this) / 2,
                             worldPositionToScreenPosition(gameObject.getPosition()).y() - image.getHeight(this) / 2,
                             this);
+                    g2.dispose();
                 } catch (IOException e) {
-                    // throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }
