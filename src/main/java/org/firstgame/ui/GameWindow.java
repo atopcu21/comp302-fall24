@@ -33,6 +33,9 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
     private JPanel inventoryContainer;
     private JPanel healthPanel;
     private BufferedImage healthImage;
+    private JLabel luringGemLabel;
+    private JLabel cloakLabel;
+    private JLabel revealLabel;
 
     private boolean enchantmentsGenerating = false;
 
@@ -44,15 +47,29 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
     private boolean highlightRune;
 
     private GameWindow() {
+        luringGemLabel = createItemLabel("src/main/java/org/firstgame/assets/luringGem.png", RokueLikeGame.getInstance().getPlayer().isLuringGem());
+        cloakLabel = createItemLabel("src/main/java/org/firstgame/assets/cloak.png", RokueLikeGame.getInstance().getPlayer().isCloak());
+        revealLabel = createItemLabel("src/main/java/org/firstgame/assets/reveal.png", RokueLikeGame.getInstance().getPlayer().isReveal());
+
+
         inventoryPanel = new JPanel();
         inventoryPanel.setBackground(new Color(60, 60, 60, 128));
         inventoryPanel.setPreferredSize(new Dimension(320, 420));
         inventoryPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 20)); // Top, left, bottom, right margins
+        
+        luringGemLabel.setBounds(10, 100, 32, 32); // Adjust the size and position as needed
+        cloakLabel.setBounds(50, 100, 32, 32); // Adjust the size and position as needed
+        revealLabel.setBounds(90, 100, 32, 32); // Adjust the size and position as needed
+
+        inventoryPanel.add(luringGemLabel);
+        inventoryPanel.add(cloakLabel);
+        inventoryPanel.add(revealLabel);
+
 
         healthPanel = new JPanel();
         healthPanel.setOpaque(false); // Make the health panel fully transparent
         healthPanel.setBackground(new Color(0, 0, 0, 0)); // Ensure no background color
-        inventoryPanel.add(healthPanel, BorderLayout.CENTER);
+        
         
         try {
             healthImage = ImageIO.read(new File("src/main/java/org/firstgame/assets/heart.png")); // Load the health image
@@ -70,7 +87,8 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
         inventoryContainer = new JPanel(new BorderLayout());
         inventoryContainer.setBorder(BorderFactory.createEmptyBorder(80, 0, 80, 100)); // Top, left, bottom, right margins
-        inventoryContainer.add(inventoryPanel, BorderLayout.CENTER);
+        inventoryContainer.add(healthPanel, BorderLayout.CENTER);
+        inventoryContainer.add(inventoryPanel, BorderLayout.SOUTH);
         inventoryContainer.setBackground(getBackground());
         
         frame.add(inventoryContainer, BorderLayout.EAST);
@@ -134,44 +152,6 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         return instance;
     }
 
-    // @Override
-    // public void paintComponent(Graphics g) {
-    //     super.paintComponent(g);
-    //     if(gameInstance != null) {
-    //         for(GameObject gameObject : gameInstance.getGameObjects()) {
-    //             BufferedImage image = null;
-    //             try {
-    //                 image = ImageIO.read(new File(gameObject.getSprite()));
-    //                 int width = image.getWidth();
-    //                 int height = image.getHeight();
-    //                 BufferedImage bi = new BufferedImage(width, height, image.getType());
-    //                 Graphics2D g2 = bi.createGraphics();
-
-    //                 AffineTransform transform = new AffineTransform();
-
-    //                 if(gameObject.getFacingDirection() == Rotation.LEFT){
-    //                     transform.scale(-1, 1);
-    //                     transform.translate(-width, 0);
-    //                 } else {
-    //                     transform.scale(1, 1);
-    //                 }
-
-    //                 g2.drawImage(image, transform, null);
-
-    //                 if(gameObject.hasRune() && highlightRune == true){
-    //                     bi = increaseBrightness(bi, 50);
-    //                 }
-
-    //                 g.drawImage(bi,
-    //                         worldPositionToScreenPosition(gameObject.getPosition()).x() - image.getWidth(this) / 2,
-    //                         worldPositionToScreenPosition(gameObject.getPosition()).y() - image.getHeight(this) / 2,
-    //                         this);
-    //             } catch (IOException e) {
-    //                 // throw new RuntimeException(e);
-    //             }
-    //         }
-    //     }
-    // }
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -501,5 +481,27 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         }
         healthPanel.revalidate();
         healthPanel.repaint();
+    }
+
+    private JLabel createItemLabel(String imagePath, boolean isActive) {
+        JLabel label = new JLabel();
+        try {
+            BufferedImage image = ImageIO.read(new File(imagePath));
+            if (!isActive) {
+                image = convertToGrayscale(image);
+            }
+            label.setIcon(new ImageIcon(image));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return label;
+    }
+
+    private BufferedImage convertToGrayscale(BufferedImage image) {
+        BufferedImage grayImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        Graphics g = grayImage.getGraphics();
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
+        return grayImage;
     }
 }

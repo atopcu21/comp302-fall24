@@ -288,4 +288,13 @@ public class RokueLikeGame {
     public String getCurrentLevel() {
         return currentLevel;
     }
+
+    public void removeGameObject(GameObject gameObject) {
+    switch (currentLevel) {
+        case "Earth" -> gameObjectsEarth.remove(gameObject);
+        case "Air" -> gameObjectsAir.remove(gameObject);
+        case "Fire" -> gameObjectsFire.remove(gameObject);
+        // Add other levels if needed
+    }
+}
 }

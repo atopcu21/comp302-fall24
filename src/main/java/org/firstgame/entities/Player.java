@@ -24,8 +24,8 @@ public class Player extends GameObject {
         setPosition(1,1);
         setSprite(Constants.PLAYER_SPRITE);
         hasExtraTime = false;
-        hasReveal = false;
-        hasCloak = false;
+        hasReveal = true;
+        hasCloak = true;
         hasLuringGem = false;
     }
 
@@ -80,7 +80,7 @@ public class Player extends GameObject {
         this.hasExtraTime = hasExtraTime;
     }
     
-    public boolean isHasReveal() {
+    public boolean isReveal() {
         return hasReveal;
     }
     
@@ -88,7 +88,7 @@ public class Player extends GameObject {
         this.hasReveal = hasReveal;
     }
     
-    public boolean isHasCloak() {
+    public boolean isCloak() {
         return hasCloak;
     }
     
@@ -96,7 +96,7 @@ public class Player extends GameObject {
         this.hasCloak = hasCloak;
     }
     
-    public boolean isHasLuringGem() {
+    public boolean isLuringGem() {
         return hasLuringGem;
     }
     

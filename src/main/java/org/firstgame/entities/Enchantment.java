@@ -8,9 +8,9 @@ public class Enchantment extends GameObject {
     public Enchantment(String sprite) {
 
         this.sprite = sprite;
-                Random rand = new Random();
-        int x = rand.nextInt(12);
-        int y = rand.nextInt(12);
+        Random rand = new Random();
+        int x = rand.nextInt(10) + 1;
+        int y = rand.nextInt(10) + 1;
         setPosition(x, y);
     }
 
