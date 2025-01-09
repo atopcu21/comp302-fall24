@@ -103,7 +103,4 @@ public class Player extends GameObject {
     public void setHasLuringGem(boolean hasLuringGem) {
         this.hasLuringGem = hasLuringGem;
     }
-
-
-
 }
