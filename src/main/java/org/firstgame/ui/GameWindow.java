@@ -34,6 +34,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
     private JPanel healthPanel;
     private BufferedImage healthImage;
 
+    private boolean enchantmentsGenerating = false;
 
 
 
@@ -227,6 +228,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
     public void updateScreen() {
         RokueLikeGame.getInstance().movePlayer();
         generateMonsters();
+        generateEnchantments();
         moveMonsters();
         checkForCollisions();
         checkRuneFound();
@@ -240,6 +242,42 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
 
             gameObject.checkForCollisions();
+        }
+    }
+
+
+    
+
+    public void generateEnchantments() {
+        // Spawns an enchantment every 12 seconds when (time % 12 == 11), similar to monster logic
+        if (((System.currentTimeMillis() - startTime) / 1000) % 12 == 11) {
+            if (!enchantmentsGenerating) {
+                enchantmentsGenerating = true;
+                Random r = new Random();
+                int i = r.nextInt(4);
+                Enchantment enchantment = null;
+                switch (i) {
+                    case 0: {
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/time.png");
+                        break;
+                    }
+                    case 1: {
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/luringGem.png");
+                        break;
+                    }
+                    case 2: {
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/cloak.png");
+                        break;
+                    }
+                    case 3: {
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                        break;
+                    }
+                }
+                RokueLikeGame.getInstance().addGameObject(enchantment);
+            }
+        } else {
+            enchantmentsGenerating = false;
         }
     }
 
@@ -273,6 +311,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
             monstersGenerating = false;
         }
     }
+    
 
     public void moveMonsters() {
         List<GameObject> sceneObjects = new ArrayList<>(RokueLikeGame.getInstance().getGameObjects());

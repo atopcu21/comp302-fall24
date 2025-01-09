@@ -11,8 +11,8 @@ public class FighterMonster extends Monster {
         super();
         setSprite(Constants.FIGHTER_SPRITE);
         Random rand = new Random();
-        int x = rand.nextInt(12);
-        int y = rand.nextInt(12);
+        int x = rand.nextInt(10) + 1;
+        int y = rand.nextInt(10) + 1;
         setPosition(x, y);
     }
 

@@ -1,14 +1,21 @@
 package org.firstgame.entities;
 
+import java.util.Random;
+
 public class Enchantment extends GameObject {
-    private String type;
+    private String sprite;
 
-    public Enchantment(String type) {
+    public Enchantment(String sprite) {
 
-        this.type = type;
+        this.sprite = sprite;
+                Random rand = new Random();
+        int x = rand.nextInt(12);
+        int y = rand.nextInt(12);
+        setPosition(x, y);
     }
 
-    public String getType() {
-        return type;
+    public String getSprite() {
+        return sprite;
     }
+
 }
