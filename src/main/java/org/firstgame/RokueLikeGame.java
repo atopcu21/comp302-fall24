@@ -227,8 +227,6 @@ public class RokueLikeGame {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - lastRKeyPressTime >= 1000) { // 1 second interval
                     // Message box that says "r is pressed"
-                    
-                    
                     gameWindow.changeRuneHighlight();
                     lastRKeyPressTime = currentTime;
                 }
@@ -259,22 +257,23 @@ public class RokueLikeGame {
             case "Earth" -> {
                 currentLevel = "Air";
                 gameWindow.setBackgroundColor(new Color(135, 206, 235)); // Light blue for Air
-
+                break;
             }
             case "Air" -> {
                 currentLevel = "Water";
                 gameWindow.setBackgroundColor(new Color(0, 0, 255)); // Blue for Water
-
+                break;
             }
             case "Water" -> {
                 currentLevel = "Fire";
                 gameWindow.setBackgroundColor(new Color(255, 69, 0)); // Orange-Red for Fire
-
+                break;
             }
             case "Fire" -> {
                 currentLevel = "Finished";
                 JOptionPane.showMessageDialog(gameWindow, "Congratulations! You have won the game!", "Game Won", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
+                break;
             }
             default -> {
                 return;
@@ -290,5 +289,6 @@ public class RokueLikeGame {
         return currentLevel;
     }
 }
+
 
 
