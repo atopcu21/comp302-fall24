@@ -215,6 +215,9 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         updateTime();
         repaint();
         updateHealth(RokueLikeGame.getInstance().getPlayer().getLives());
+        if(RokueLikeGame.getInstance().getPlayer().getLives() <= 0){
+            RokueLikeGame.getInstance().gameOver();
+        }
     }
 
     public void checkForCollisions() {

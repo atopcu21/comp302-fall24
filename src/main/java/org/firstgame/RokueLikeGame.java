@@ -2,6 +2,7 @@ package org.firstgame;
 
 import org.firstgame.entities.*;
 import org.firstgame.properties.Rotation;
+import org.firstgame.ui.BuilderWindowEarth;
 import org.firstgame.ui.GameOverScreen;
 import org.firstgame.ui.GameWindow;
 
@@ -19,6 +20,7 @@ import static org.firstgame.properties.Constants.*;
 
 public class RokueLikeGame {
     private static RokueLikeGame instance;
+
     private List<GameObject> gameObjectsEarth = new ArrayList<>();
     private List<GameObject> gameObjectsAir = new ArrayList<>();
     private List<GameObject> gameObjectsFire = new ArrayList<>();
@@ -41,6 +43,8 @@ public class RokueLikeGame {
         }
         return instance;
     }
+
+    
 
     public void createPlayer(){
         player = new Player();
@@ -202,14 +206,30 @@ public class RokueLikeGame {
     }
 
     public void gameOver() {
-    isGameOver = true;
-    activeKeys.clear();
-    for (KeyListener keyListener : gameWindow.getKeyListeners()) {
-        gameWindow.removeKeyListener(keyListener);
+        isGameOver = true;
+        activeKeys.clear();
+        for (KeyListener keyListener : gameWindow.getKeyListeners()) {
+            gameWindow.removeKeyListener(keyListener);
+        }
+        gameWindow.stopTimer();
+        SwingUtilities.invokeLater(GameOverScreen::new);  // Display the game over screen
     }
-    gameWindow.stopTimer();
-    SwingUtilities.invokeLater(GameOverScreen::new);  // Display the game over screen
-}
+
+    public void resetGame() {
+        // Reset key variables
+        isGameOver = false;
+        player = new Player();  // Reset player state (lives, score, inventory)
+        currentLevel = "Earth";  // Start from the first hall
+        adventureTime = 300;  // Reset timer (or set according to your default)
+        
+        // Clear game objects and restart
+        gameObjectsEarth.clear();
+        gameObjectsAir.clear();
+        gameObjectsFire.clear();
+        gameObjectsWater.clear();  
+    }
+    
+
     private long lastRKeyPressTime = 0;
 
     public void movePlayer() {
