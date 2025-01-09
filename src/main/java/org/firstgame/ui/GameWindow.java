@@ -15,6 +15,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -182,22 +183,32 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                     int height = image.getHeight();
                     BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g2 = bi.createGraphics();
-    
+
                     // Enable transparency
                     g2.setComposite(AlphaComposite.SrcOver);
-    
+
                     AffineTransform transform = new AffineTransform();
-    
+
+                    if (gameObject instanceof Arrow) {
+                        transform.translate(width / 2.0, height / 2.0);
+
+                        if (gameObject.getFacingDirection() != null) {
+                            transform.rotate(Math.toRadians(gameObject.getFacingDirection().getAngle()));
+                        }
+
+                        transform.translate(-width / 2.0, -height / 2.0);
+                    }
+
                     if (gameObject.getFacingDirection() == Rotation.LEFT) {
                         transform.scale(-1, 1);
                         transform.translate(-width, 0);
-                    } else {
+                    } else if(gameObject.getFacingDirection() == null) {
                         transform.scale(1, 1);
                     }
     
                     g2.drawImage(image, transform, null);
     
-                    if (gameObject.hasRune() && highlightRune == true) {
+                    if (gameObject.hasRune() && highlightRune) {
                         bi = increaseBrightness(bi, 50);
                     }
     
@@ -237,7 +248,10 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
             if(!monstersGenerating){
                 monstersGenerating = true;
                 Random r = new Random();
-                int i = r.nextInt(3);
+                boolean wizardExists = !RokueLikeGame.getInstance().getGameObjects().stream().filter(gameObject -> gameObject instanceof WizardMonster).toList().isEmpty();
+                int randomRange;
+                if (wizardExists) randomRange =  2; else randomRange = 3;
+                int i = r.nextInt(randomRange);
                 GameObject monster = null;
                 switch (i) {
                     case 0: {
@@ -261,7 +275,8 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
     }
 
     public void moveMonsters() {
-        for (GameObject gameObject : RokueLikeGame.getInstance().getGameObjects()) {
+        List<GameObject> sceneObjects = new ArrayList<>(RokueLikeGame.getInstance().getGameObjects());
+        for (GameObject gameObject : sceneObjects) {
             if(gameObject instanceof FighterMonster){
                 if(((System.currentTimeMillis() - startTime) / 1000) % 3 == 0){
                     Random r = new Random();
@@ -288,6 +303,15 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                     }
                 } else if(((System.currentTimeMillis() - startTime) / 1000) % 5 == 0){
                     gameObject.setSprite(Constants.WIZARD_SPRITE);
+                }
+            } else if (gameObject instanceof ArcherMonster) {
+                if(((System.currentTimeMillis() - ((ArcherMonster) gameObject).getTimeCreated()) / 1000) % 2 == 1){
+                    ((ArcherMonster) gameObject).fireArrow(RokueLikeGame.getInstance().getPlayer());
+                }
+            } else if (gameObject instanceof Arrow) {
+                ((Arrow) gameObject).move();
+                if(((Arrow) gameObject).isOutOfRange){
+                    RokueLikeGame.getInstance().getGameObjects().remove(gameObject);
                 }
             }
         }
