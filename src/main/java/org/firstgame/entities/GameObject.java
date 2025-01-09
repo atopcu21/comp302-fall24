@@ -129,7 +129,6 @@ public class GameObject {
 
     public void onCollusion(GameObject otherObject) {
         if(otherObject.isColliding){
-
             return;
         }
         otherObject.setColliding(true);
@@ -217,10 +216,8 @@ public class GameObject {
             if(getPosition().getX() > minX && getPosition().getX() < maxX && getPosition().getY() > minY && getPosition().getY() < maxY) {
                 if(!(gameObject.equals(this))){
                     gameObject.onCollusion(this);
-                    
                 }
             }
-            
         }
     }
 
