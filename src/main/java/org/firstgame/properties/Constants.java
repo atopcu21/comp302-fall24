@@ -23,6 +23,7 @@ public class Constants {
     public static final String DOOR_OPENED_SPRITE = "src/main/java/org/firstgame/assets/door_open.png";
     public static final String NEXT_BUTTON_SPRITE = "src/main/java/org/firstgame/assets/next.png";
     public static final String PLAY_BUTTON_SPRITE = "src/main/java/org/firstgame/assets/play.png";
+    public static final String ARROW_SPRITE = "src/main/java/org/firstgame/assets/arrow.png";
 
     public static final double WORLD_MARGIN_X = 4;
     public static final double WORLD_MARGIN_Y = 2;
