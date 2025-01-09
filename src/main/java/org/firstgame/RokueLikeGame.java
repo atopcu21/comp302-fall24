@@ -2,6 +2,7 @@ package org.firstgame;
 
 import org.firstgame.entities.*;
 import org.firstgame.properties.Rotation;
+import org.firstgame.ui.GameOverScreen;
 import org.firstgame.ui.GameWindow;
 
 import java.awt.Color;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import static org.firstgame.properties.Constants.*;
 
@@ -200,13 +202,14 @@ public class RokueLikeGame {
     }
 
     public void gameOver() {
-        isGameOver = true;
-        activeKeys.clear();
-        for (KeyListener keyListener : gameWindow.getKeyListeners()) {
-            gameWindow.removeKeyListener(keyListener);
-        }
-        gameWindow.stopTimer();
+    isGameOver = true;
+    activeKeys.clear();
+    for (KeyListener keyListener : gameWindow.getKeyListeners()) {
+        gameWindow.removeKeyListener(keyListener);
     }
+    gameWindow.stopTimer();
+    SwingUtilities.invokeLater(GameOverScreen::new);  // Display the game over screen
+}
     private long lastRKeyPressTime = 0;
 
     public void movePlayer() {
