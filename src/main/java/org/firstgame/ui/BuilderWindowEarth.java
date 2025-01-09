@@ -40,12 +40,6 @@ import static org.firstgame.properties.Constants.WORLD_MARGIN_Y;
 import org.firstgame.properties.ScreenPosition;
 import org.firstgame.properties.WorldPosition;
 
-
-
-
-
-
-
 public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMotionListener {
     private static BuilderWindowEarth instance;
     private GameObject currentItem;
@@ -220,17 +214,17 @@ public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMo
         }
         if (clickPoint.x >= 947 && clickPoint.x <= 947 + 44) {
             if (clickPoint.y >= 200 && clickPoint.y <= 200 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), BUILD_COLUMN_SPRITE);
-            } else if (clickPoint.y >= 300 && clickPoint.y <= 275 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), BUILD_BOX_DOUBLE_SPRITE);
-            } else if (clickPoint.y >= 400 && clickPoint.y <= 350 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), BUILD_BOX_SMALL_SPRITE);
-            } else if (clickPoint.y >= 500 && clickPoint.y <= 425 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/chest-t1.png");
-            } else if (clickPoint.y >= 550 && clickPoint.y <= 475 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/chest-t2.png");
-            } else if (clickPoint.y >= 600 && clickPoint.y <= 525 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/skull.png");
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), BUILD_COLUMN_SPRITE);
+            } else if (clickPoint.y >= 275 && clickPoint.y <= 275 + 44) {
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), BUILD_BOX_DOUBLE_SPRITE);
+            } else if (clickPoint.y >= 350 && clickPoint.y <= 350 + 44) {
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), BUILD_BOX_SMALL_SPRITE);
+            } else if (clickPoint.y >= 425 && clickPoint.y <= 425 + 44) {
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), "src/main/java/org/firstgame/assets/chest-t1.png");
+            } else if (clickPoint.y >= 475 && clickPoint.y <= 475 + 44) {
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), "src/main/java/org/firstgame/assets/chest-t2.png");
+            } else if (clickPoint.y >= 525 && clickPoint.y <= 525 + 44) {
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), "src/main/java/org/firstgame/assets/skull.png");
             }
         } else {
             if (currentItem != null && isInsideWalls(clickPoint)) {
@@ -274,7 +268,8 @@ public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMo
     @Override
     public void mouseMoved(MouseEvent e) {
         if(currentItem != null) {
-            currentItem.setPosition(screenPositionToWorldPosition(new ScreenPosition(e.getX(), e.getY())));
+            currentItem.setPosition(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)));
+            repaint();
         }
     }
 
