@@ -139,8 +139,8 @@ public class BuilderWindowWater extends JPanel implements MouseListener, MouseMo
         }
         g.drawImage(chest, 900, 125, null);
         g.drawImage(column, 947, 200, null);
-        g.drawImage(doubleBox, 947, 300, null);
-        g.drawImage(smallBox, 947, 400, null);
+        g.drawImage(doubleBox, 947, 275, null);
+        g.drawImage(smallBox, 947, 350, null);
         g.drawImage(chest_t1, 947, 425, null);
         g.drawImage(chest_t2, 947, 475, null);
         g.drawImage(skull, 947, 525, null);
@@ -199,22 +199,22 @@ public class BuilderWindowWater extends JPanel implements MouseListener, MouseMo
     @Override
     public void mouseReleased(MouseEvent e) {
         Point clickPoint = e.getPoint();
-        if(clickPoint.x >= 925 && clickPoint.x <= 925 + 70 && clickPoint.y >= 582 && clickPoint.y <= 582 + 36 && placedObjects.size() >= 13) {
+        if(clickPoint.x >= 925 && clickPoint.x <= 925 + 70 && clickPoint.y >= 582 && clickPoint.y <= 582 + 36 && placedObjects.size() >= 6) {
             goToNextLevelBuilder();
         }
         if (clickPoint.x >= 947 && clickPoint.x <= 947 + 44) {
             if (clickPoint.y >= 200 && clickPoint.y <= 200 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), BUILD_COLUMN_SPRITE);
-            } else if (clickPoint.y >= 300 && clickPoint.y <= 275 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), BUILD_BOX_DOUBLE_SPRITE);
-            } else if (clickPoint.y >= 400 && clickPoint.y <= 350 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), BUILD_BOX_SMALL_SPRITE);
-            } else if (clickPoint.y >= 500 && clickPoint.y <= 425 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/chest-t1.png");
-            } else if (clickPoint.y >= 550 && clickPoint.y <= 475 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/chest-t2.png");
-            } else if (clickPoint.y >= 600 && clickPoint.y <= 525 + 44) {
-                currentItem = new GameObject(new WorldPosition(0, 0), "src/main/java/org/firstgame/assets/skull.png");
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), BUILD_COLUMN_SPRITE);
+            } else if (clickPoint.y >= 275 && clickPoint.y <= 275 + 44) {
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), BUILD_BOX_DOUBLE_SPRITE);
+            } else if (clickPoint.y >= 350 && clickPoint.y <= 350 + 44) {
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), BUILD_BOX_SMALL_SPRITE);
+            } else if (clickPoint.y >= 425 && clickPoint.y <= 425 + 44) {
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), "src/main/java/org/firstgame/assets/chest-t1.png");
+            } else if (clickPoint.y >= 475 && clickPoint.y <= 475 + 44) {
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), "src/main/java/org/firstgame/assets/chest-t2.png");
+            } else if (clickPoint.y >= 525 && clickPoint.y <= 525 + 44) {
+                currentItem = new GameObject(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)), "src/main/java/org/firstgame/assets/skull.png");
             }
         } else {
             if (currentItem != null && isInsideWalls(clickPoint)) {
@@ -259,7 +259,8 @@ public class BuilderWindowWater extends JPanel implements MouseListener, MouseMo
     @Override
     public void mouseMoved(MouseEvent e) {
         if(currentItem != null) {
-            currentItem.setPosition(screenPositionToWorldPosition(new ScreenPosition(e.getX(), e.getY())));
+            currentItem.setPosition(screenPositionToWorldPosition(new ScreenPosition(e.getX() - 22, e.getY() - 22)));
+            repaint();
         }
     }
 
