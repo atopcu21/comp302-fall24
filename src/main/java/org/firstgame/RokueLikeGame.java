@@ -234,8 +234,13 @@ public class RokueLikeGame {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - lastRKeyPressTime >= 1000) { // 1 second interval
                     // Message box that says "r is pressed"
-                    gameWindow.changeRuneHighlight();
-                    lastRKeyPressTime = currentTime;
+                    if(RokueLikeGame.getInstance().getPlayer().isReveal()){
+                        RokueLikeGame.getInstance().getPlayer().setHasReveal(false);                    
+                        gameWindow.changeRuneHighlight();
+                        lastRKeyPressTime = currentTime;
+
+                    }
+
                 }
             }
         } else if (activeKeys.size() == 2) {
