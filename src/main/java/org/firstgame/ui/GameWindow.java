@@ -240,7 +240,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
             if (!enchantmentsGenerating) {
                 enchantmentsGenerating = true;
                 Random r = new Random();
-                int i = r.nextInt(4);
+                int i = r.nextInt(5);
                 Enchantment enchantment = null;
                 switch (i) {
                     case 0: {
@@ -259,22 +259,33 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                         enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
                         break;
                     }
+                    case 4: {
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/firstAidKit.png");
+                        break;
+                    }
+
+                    // first aid kit testing
                     // case 0: {
-                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/firstAidKit.png");
                     //     break;
                     // }
                     // case 1: {
-                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/firstAidKit.png");
                     //     break;
                     // }
                     // case 2: {
-                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/firstAidKit.png");
                     //     break;
                     // }
                     // case 3: {
-                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/firstAidKit.png");
                     //     break;
                     // }
+                    // case 4: {
+                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/firstAidKit.png");
+                    //     break;
+                    // }
+
                 }
                 RokueLikeGame.getInstance().addGameObject(enchantment);
             }

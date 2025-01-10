@@ -60,6 +60,9 @@ public class Player extends GameObject {
     public void setLives(int lives) {
         this.lives = lives;
     }
+    public void increaseLives() {
+        if(lives < 4){lives++;};
+    }
 
     public void addToInventory(GameObject item) {
         inventory.add(item);

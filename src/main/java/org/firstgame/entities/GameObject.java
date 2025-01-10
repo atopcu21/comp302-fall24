@@ -212,6 +212,19 @@ public class GameObject {
             RokueLikeGame.getInstance().addAdventureTime(5);
             RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
         }
+        if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/firstAidKit.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            RokueLikeGame.getInstance().removeAllEnchantments();
+            RokueLikeGame.getInstance().getPlayer().increaseLives();
+
+
+            RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
+        } else if (this.getSprite().equals("src/main/java/org/firstgame/assets/firstAidKit.png") && otherObject.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            RokueLikeGame.getInstance().removeAllEnchantments();
+            RokueLikeGame.getInstance().getPlayer().increaseLives();
+
+
+            RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
+        }
         
     }
 
