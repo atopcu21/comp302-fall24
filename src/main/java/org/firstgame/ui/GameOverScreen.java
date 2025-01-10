@@ -65,8 +65,8 @@ public class GameOverScreen extends JPanel {
     private void retryGame() {
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         parentFrame.dispose();  // Close the Game Over screen
-        RokueLikeGame.getInstance().initGame();  // Restart the game
-    }
+        RokueLikeGame.getInstance().resetGame();  // Restart the game
+    } 
 
     private void goToMainMenu() {
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
