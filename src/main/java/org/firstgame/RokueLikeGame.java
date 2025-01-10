@@ -14,15 +14,19 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import java.util.Iterator;
 
 import static org.firstgame.properties.Constants.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RokueLikeGame {
     private static RokueLikeGame instance;
-    private List<GameObject> gameObjectsEarth = new ArrayList<>();
-    private List<GameObject> gameObjectsAir = new ArrayList<>();
-    private List<GameObject> gameObjectsFire = new ArrayList<>();
-    private List<GameObject> gameObjectsWater = new ArrayList<>();
+    private List<GameObject> gameObjectsEarth = new CopyOnWriteArrayList<>();
+    private List<GameObject> gameObjectsAir = new CopyOnWriteArrayList<>();
+    private List<GameObject> gameObjectsFire = new CopyOnWriteArrayList<>();
+    private List<GameObject> gameObjectsWater = new CopyOnWriteArrayList<>();
+
+
     private GameWindow gameWindow;
     private Set<Integer> activeKeys = new HashSet<>();
     private Player player;
@@ -293,11 +297,20 @@ public class RokueLikeGame {
     }
 
     public void removeGameObject(GameObject gameObject) {
-    switch (currentLevel) {
-        case "Earth" -> gameObjectsEarth.remove(gameObject);
-        case "Air" -> gameObjectsAir.remove(gameObject);
-        case "Fire" -> gameObjectsFire.remove(gameObject);
-        // Add other levels if needed
+        switch (getCurrentLevel()) {
+            case "Earth" -> gameObjectsEarth.remove(gameObject);
+            case "Air" -> gameObjectsAir.remove(gameObject);
+            case "Fire" -> gameObjectsFire.remove(gameObject);
+            case "Water" -> gameObjectsWater.remove(gameObject);
+        }
     }
-}
+
+    public void removeAllEnchantments() {
+        switch (getCurrentLevel()) {
+            case "Earth" -> gameObjectsEarth.removeIf(gameObject -> gameObject instanceof Enchantment);
+            case "Air" -> gameObjectsAir.removeIf(gameObject -> gameObject instanceof Enchantment);
+            case "Fire" -> gameObjectsFire.removeIf(gameObject -> gameObject instanceof Enchantment);
+            case "Water" -> gameObjectsWater.removeIf(gameObject -> gameObject instanceof Enchantment);
+        }
+    }
 }

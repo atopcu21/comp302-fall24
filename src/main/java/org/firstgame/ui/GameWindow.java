@@ -504,4 +504,55 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         g.dispose();
         return grayImage;
     }
+
+    public void updateEnchantmentIcons() {
+        Player player = RokueLikeGame.getInstance().getPlayer();
+        if(player.isLuringGem()){
+            BufferedImage image = null;
+            try {
+                image = ImageIO.read(new File("src/main/java/org/firstgame/assets/luringGem.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            luringGemLabel.setIcon(new ImageIcon(image));
+        }
+        else {
+            try {
+                luringGemLabel.setIcon(new ImageIcon(convertToGrayscale(ImageIO.read(new File("src/main/java/org/firstgame/assets/luringGem.png")))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if(player.isCloak()){
+            try {
+                BufferedImage image = ImageIO.read(new File("src/main/java/org/firstgame/assets/cloak.png"));
+                cloakLabel.setIcon(new ImageIcon(image));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            try {
+                cloakLabel.setIcon(new ImageIcon(convertToGrayscale(ImageIO.read(new File("src/main/java/org/firstgame/assets/cloak.png")))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+////////////////////////////////////////////////
+        if(player.isReveal()){
+            try {
+                BufferedImage image = ImageIO.read(new File("src/main/java/org/firstgame/assets/reveal.png"));
+                revealLabel.setIcon(new ImageIcon(image));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            try {
+                revealLabel.setIcon(new ImageIcon(convertToGrayscale(ImageIO.read(new File("src/main/java/org/firstgame/assets/reveal.png")))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

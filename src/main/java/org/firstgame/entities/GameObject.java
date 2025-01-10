@@ -8,6 +8,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -168,7 +170,53 @@ public class GameObject {
         } else if (this.getSprite().equals("src/main/java/org/firstgame/assets/fighter.png") && otherObject.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
             handlePlayerCollision();
         }
+
+
+        // enchantment collision parts are below
+        if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/cloak.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            RokueLikeGame.getInstance().removeAllEnchantments();
+            RokueLikeGame.getInstance().getPlayer().setHasCloak(true);
+            RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
+        } else if (this.getSprite().equals("src/main/java/org/firstgame/assets/cloak.png") && otherObject.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            RokueLikeGame.getInstance().removeAllEnchantments();
+            RokueLikeGame.getInstance().getPlayer().setHasCloak(true);
+            RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
+        }
+        
+        if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/luringGem.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            RokueLikeGame.getInstance().removeAllEnchantments();
+            RokueLikeGame.getInstance().getPlayer().setHasLuringGem(true);
+            RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
+        } else if (this.getSprite().equals("src/main/java/org/firstgame/assets/luringGem.png") && otherObject.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            RokueLikeGame.getInstance().removeAllEnchantments();
+            RokueLikeGame.getInstance().getPlayer().setHasLuringGem(true);
+            RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
+        }
+
+        if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/reveal.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            RokueLikeGame.getInstance().removeAllEnchantments();
+            RokueLikeGame.getInstance().getPlayer().setHasReveal(true);
+            RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
+        } else if (this.getSprite().equals("src/main/java/org/firstgame/assets/reveal.png") && otherObject.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            RokueLikeGame.getInstance().removeAllEnchantments();
+            RokueLikeGame.getInstance().getPlayer().setHasReveal(true);
+            RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
+        }
+
+        if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/time.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            RokueLikeGame.getInstance().removeAllEnchantments();
+            RokueLikeGame.getInstance().addAdventureTime(5);
+            RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
+        } else if (this.getSprite().equals("src/main/java/org/firstgame/assets/time.png") && otherObject.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+            RokueLikeGame.getInstance().removeAllEnchantments();
+            RokueLikeGame.getInstance().addAdventureTime(5);
+            RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
+        }
+        
     }
+
+
+
 
     private void handlePlayerCollision() {
         if (canDecreaseLives) {

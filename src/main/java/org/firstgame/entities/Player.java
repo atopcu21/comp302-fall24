@@ -23,9 +23,8 @@ public class Player extends GameObject {
         score = 0;
         setPosition(1,1);
         setSprite(Constants.PLAYER_SPRITE);
-        hasExtraTime = false;
-        hasReveal = true;
-        hasCloak = true;
+        hasReveal = false;
+        hasCloak = false;
         hasLuringGem = false;
     }
 
