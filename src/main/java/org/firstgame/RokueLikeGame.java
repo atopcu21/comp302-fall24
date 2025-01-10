@@ -22,20 +22,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RokueLikeGame {
     private static RokueLikeGame instance;
-<<<<<<< HEAD
     private List<GameObject> gameObjectsEarth = new CopyOnWriteArrayList<>();
     private List<GameObject> gameObjectsAir = new CopyOnWriteArrayList<>();
     private List<GameObject> gameObjectsFire = new CopyOnWriteArrayList<>();
     private List<GameObject> gameObjectsWater = new CopyOnWriteArrayList<>();
 
 
-=======
-
-    private List<GameObject> gameObjectsEarth = new ArrayList<>();
-    private List<GameObject> gameObjectsAir = new ArrayList<>();
-    private List<GameObject> gameObjectsFire = new ArrayList<>();
-    private List<GameObject> gameObjectsWater = new ArrayList<>();
->>>>>>> 4817a4bc0dc3b050906b33495e631a4bcf299ea1
     private GameWindow gameWindow;
     private Set<Integer> activeKeys = new HashSet<>();
     private Player player;
