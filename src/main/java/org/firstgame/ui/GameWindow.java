@@ -240,38 +240,38 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                 int i = r.nextInt(4);
                 Enchantment enchantment = null;
                 switch (i) {
-                    // case 0: {
-                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/time.png");
-                    //     break;
-                    // }
-                    // case 1: {
-                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/luringGem.png");
-                    //     break;
-                    // }
-                    // case 2: {
-                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/cloak.png");
-                    //     break;
-                    // }
-                    // case 3: {
-                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
-                    //     break;
-                    // }
                     case 0: {
-                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/time.png");
                         break;
                     }
                     case 1: {
-                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/luringGem.png");
                         break;
                     }
                     case 2: {
-                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/cloak.png");
                         break;
                     }
                     case 3: {
                         enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
                         break;
                     }
+                    // case 0: {
+                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                    //     break;
+                    // }
+                    // case 1: {
+                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                    //     break;
+                    // }
+                    // case 2: {
+                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                    //     break;
+                    // }
+                    // case 3: {
+                    //     enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                    //     break;
+                    // }
                 }
                 RokueLikeGame.getInstance().addGameObject(enchantment);
             }
