@@ -106,6 +106,34 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setVisible(true);
+        
+        //(160, 106, 514, 445)
+        JPanel yellowBoxnw = new JPanel();
+        yellowBoxnw.setBackground(new Color(255, 255, 0, 70)); // Yellow with 50% transparency
+        yellowBoxnw.setBounds(160, 106, 257, 222); // Adjust the position and size as needed
+        yellowBoxnw.setOpaque(true); // Set opaque to true
+        this.add(yellowBoxnw);
+        
+        JPanel yellowBoxne = new JPanel();
+        yellowBoxne.setBackground(new Color(255, 0, 0, 70)); // Red with 50% transparency
+        yellowBoxne.setBounds(417, 106, 254, 222); // Adjust the position and size as needed
+        yellowBoxne.setOpaque(true); // Set opaque to true
+        this.add(yellowBoxne);
+        
+        JPanel yellowBoxsw = new JPanel();
+        yellowBoxsw.setBackground(new Color(0, 0, 255, 70)); // 
+        yellowBoxsw.setBounds(160, 328, 257, 222); // Adjust the position and size as needed
+        yellowBoxsw.setOpaque(true); // Set opaque to true
+        this.add(yellowBoxsw);
+        
+        JPanel yellowBoxse = new JPanel();
+        yellowBoxse.setBackground(new Color(0, 255, 0, 70)); // Green with 50% transparency
+        yellowBoxse.setBounds(417, 328, 254, 222); // Adjust the position and size as needed
+        yellowBoxse.setOpaque(true); // Set opaque to true
+        this.add(yellowBoxse);
+
+
+
 
         addMouseListener(this);
 
