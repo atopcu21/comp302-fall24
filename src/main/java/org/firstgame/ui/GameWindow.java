@@ -5,6 +5,7 @@ import org.firstgame.entities.*;
 import org.firstgame.properties.*;
 
 import javax.imageio.ImageIO;
+import javax.print.attribute.standard.Media;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -20,6 +21,9 @@ import java.util.List;
 import java.util.Random;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.sound.sampled.*;
+
+import java.io.File;
 
 
 public class GameWindow extends JPanel implements KeyListener, MouseListener {
@@ -549,11 +553,38 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                     if(!door.isEmpty()){
                         Door d = (Door) door.get(0);
                         d.setOpened(true);
+                        playSound("src/main/java/org/firstgame/assets/doorSound.wav");
+
+
+                        // try {
+                        //     AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+                        //     Clip clip = AudioSystem.getClip();
+                        //     clip.open(audioStream);
+                        //     clip.start();
+                        // } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                        //     ex.printStackTrace();
+                        // }
                     }
                 }
             }
         }
     }
+
+    private void playSound(String filePath) {
+        new Thread(() -> {
+            try {
+                File file = new File(filePath);
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioStream);
+                clip.start();
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                ex.printStackTrace();
+            }
+        }).start();
+    }
+
+
 
     @Override
     public void mouseEntered(MouseEvent e) {

@@ -156,7 +156,7 @@ public class GameObject {
         otherObject.move(new Rotation(theta));
         otherObject.setColliding(false);
 
-        System.out.println("Collision detected between: " + this.getSprite() + " and " + otherObject.getSprite());
+        //System.out.println("Collision detected between: " + this.getSprite() + " and " + otherObject.getSprite());
 
 
         // if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/fighter.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
