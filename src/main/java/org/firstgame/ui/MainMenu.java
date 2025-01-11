@@ -10,7 +10,7 @@ public class MainMenu extends JPanel {
     public MainMenu() {
         JFrame frame = new JFrame("Main Menu");
         frame.add(this);
-        setBackground(new Color(40, 10, 35));
+        setBackground(new Color(74, 27, 32));
         this.setLayout(null);
         this.setFocusable(true);
 
@@ -27,18 +27,30 @@ public class MainMenu extends JPanel {
         JLabel titleLabel = createLabel();
         this.add(titleLabel);
 
-        JButton startButton = createButton("Start", 28, 565, 200, 200, 60, BuilderWindowEarth::getInstance);
+        JButton startButton = createButton("Start", 28, 545, 450, 200, 60, BuilderWindowEarth::getInstance);
         this.add(startButton);
 
-        JButton helpButton = createButton("Help", 28, 565, 260, 200, 60, this::showHelpDialog);
+        JButton helpButton = createButton("Help", 28, 545, 510, 200, 60, this::showHelpDialog);
         this.add(helpButton);
 
-        JButton exitButton = createButton("Exit", 28, 565, 320, 200, 60, () -> System.exit(0));
+        JButton exitButton = createButton("Exit", 28, 545, 570, 200, 60, () -> System.exit(0));
         this.add(exitButton);
+
+        JLabel imageLabel = createImageLabel("src/main/java/org/firstgame/assets/goRokue.png", 330, 10, 640, 360);
+        this.add(imageLabel);
+    }
+
+    private JLabel createImageLabel(String filePath, int x, int y, int width, int height) {
+        ImageIcon imageIcon = new ImageIcon(filePath);
+        Image image = imageIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        imageIcon = new ImageIcon(image);
+        JLabel label = new JLabel(imageIcon);
+        label.setBounds(x, y, width, height);
+        return label;
     }
 
     private JLabel createLabel() {
-        JLabel label = new JLabel("Main Menu", SwingConstants.CENTER);
+        JLabel label = new JLabel("", SwingConstants.CENTER);
         label.setBounds(465, 50, 400, 50);
         label.setForeground(Color.WHITE);
         try {
