@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class GameWindow extends JPanel implements KeyListener, MouseListener {
@@ -100,7 +102,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
 
         frame.add(this);
-        setBackground(new Color(40, 10, 35));
+        setBackground(new Color(40, 10, 35)); 
         addKeyListener(this);
         this.setFocusable(true);
         this.requestFocusInWindow();
@@ -381,11 +383,24 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
                 }
                 RokueLikeGame.getInstance().addGameObject(enchantment);
+                scheduleRemoveAllEnchantments();
             }
         } else {
             enchantmentsGenerating = false;
         }
     }
+    private void scheduleRemoveAllEnchantments() {
+        Timer timer = new Timer(6000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RokueLikeGame.getInstance().removeAllEnchantments();
+            }
+        });
+        timer.setRepeats(false); // Ensure the timer only runs once
+        timer.start();
+    }
+
+    
 
     public void generateMonsters() {
         if(((System.currentTimeMillis() - startTime) / 1000) % 8 == 7){
