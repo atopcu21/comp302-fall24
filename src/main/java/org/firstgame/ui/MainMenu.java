@@ -4,8 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainMenu extends JPanel {
+
+    private Image backgroundImage1;
+    private Image backgroundImage2;
+    private boolean showFirstImage = true;
+    private Timer timer;
 
     public MainMenu() {
         JFrame frame = new JFrame("Main Menu");
@@ -20,8 +27,31 @@ public class MainMenu extends JPanel {
         frame.setResizable(false);
         frame.setVisible(true);
 
+        backgroundImage1 = new ImageIcon("src/main/java/org/firstgame/assets/background1.png").getImage();
+        backgroundImage2 = new ImageIcon("src/main/java/org/firstgame/assets/background2.png").getImage();
+
+
+        timer = new Timer(400, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showFirstImage = !showFirstImage;
+                repaint();
+            }
+        });
+        timer.start();
+
         initializeMenuComponents();
     }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (showFirstImage) {
+            g.drawImage(backgroundImage1, 0, 0, getWidth(), getHeight(), this);
+        } else {
+            g.drawImage(backgroundImage2, 0, 0, getWidth(), getHeight(), this);
+        }
+}
 
     private void initializeMenuComponents() {
         JLabel titleLabel = createLabel();
