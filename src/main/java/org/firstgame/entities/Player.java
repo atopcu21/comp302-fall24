@@ -23,7 +23,7 @@ public class Player extends GameObject {
         score = 0;
         setPosition(1,1);
         setSprite(Constants.PLAYER_SPRITE);
-        hasReveal = false;
+        hasReveal = true;
         hasCloak = false;
         hasLuringGem = false;
     }

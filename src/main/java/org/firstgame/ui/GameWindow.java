@@ -39,6 +39,11 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
     private boolean enchantmentsGenerating = false;
 
+    private JPanel yellowBoxnw;
+    private JPanel yellowBoxne;
+    private JPanel yellowBoxsw;
+    private JPanel yellowBoxse;
+
 
 
     
@@ -108,28 +113,32 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         frame.setVisible(true);
         
         //(160, 106, 514, 445)
-        JPanel yellowBoxnw = new JPanel();
-        yellowBoxnw.setBackground(new Color(255, 255, 0, 70)); // Yellow with 50% transparency
+        yellowBoxnw = new JPanel();
+        yellowBoxnw.setBackground(new Color(255, 255, 255, 70)); // Yellow with 50% transparency
         yellowBoxnw.setBounds(160, 106, 257, 222); // Adjust the position and size as needed
         yellowBoxnw.setOpaque(true); // Set opaque to true
+        yellowBoxnw.setVisible(false);
         this.add(yellowBoxnw);
         
-        JPanel yellowBoxne = new JPanel();
-        yellowBoxne.setBackground(new Color(255, 0, 0, 70)); // Red with 50% transparency
+        yellowBoxne = new JPanel();
+        yellowBoxne.setBackground(new Color(255, 255, 255, 70)); // Red with 50% transparency
         yellowBoxne.setBounds(417, 106, 254, 222); // Adjust the position and size as needed
         yellowBoxne.setOpaque(true); // Set opaque to true
+        yellowBoxne.setVisible(false);
         this.add(yellowBoxne);
         
-        JPanel yellowBoxsw = new JPanel();
-        yellowBoxsw.setBackground(new Color(0, 0, 255, 70)); // 
+        yellowBoxsw = new JPanel();
+        yellowBoxsw.setBackground(new Color(255, 255, 255, 70)); // 
         yellowBoxsw.setBounds(160, 328, 257, 222); // Adjust the position and size as needed
         yellowBoxsw.setOpaque(true); // Set opaque to true
+        yellowBoxsw.setVisible(false);
         this.add(yellowBoxsw);
         
-        JPanel yellowBoxse = new JPanel();
-        yellowBoxse.setBackground(new Color(0, 255, 0, 70)); // Green with 50% transparency
+        yellowBoxse = new JPanel();
+        yellowBoxse.setBackground(new Color(255, 255, 255, 70)); // Green with 50% transparency
         yellowBoxse.setBounds(417, 328, 254, 222); // Adjust the position and size as needed
         yellowBoxse.setOpaque(true); // Set opaque to true
+        yellowBoxse.setVisible(false);
         this.add(yellowBoxse);
 
 
@@ -218,9 +227,30 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                     g2.drawImage(image, transform, null);
     
                     if (gameObject.hasRune() && highlightRune) {
-                        
+                        // print gameObject.getPosition to the console
+                        double x = gameObject.getPosition().getX();
+                        double y = gameObject.getPosition().getY();
+                        System.out.println(gameObject.getPosition().getX() + " " + gameObject.getPosition().getY());
+                        String runePosition = "";
 
-                        bi = increaseBrightness(bi, 50);
+
+                        if(x<6 && y<6){
+                            runePosition = "NW";
+                        }
+                        else if(x>6 && y<6){
+                            runePosition = "NE";
+                        }
+                        else if(x<6 && y>6){
+                            runePosition = "SW";
+                        }
+                        else if(x>6 && y>6){
+                            runePosition = "SE";
+                        }
+                        updateRunePosition(runePosition);
+    
+
+
+                        //bi = increaseBrightness(bi, 50);
                         updateEnchantmentIcons(); 
                     }
     
@@ -233,6 +263,41 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    public void updateRunePosition(String runePosition) {
+        switch (runePosition) {
+            case "NW":
+                yellowBoxnw.setVisible(true);
+                yellowBoxne.setVisible(false);
+                yellowBoxsw.setVisible(false);
+                yellowBoxse.setVisible(false);
+                break;
+            case "NE":
+                yellowBoxnw.setVisible(false);
+                yellowBoxne.setVisible(true);
+                yellowBoxsw.setVisible(false);
+                yellowBoxse.setVisible(false);
+                break;
+            case "SW":
+                yellowBoxnw.setVisible(false);
+                yellowBoxne.setVisible(false);
+                yellowBoxsw.setVisible(true);
+                yellowBoxse.setVisible(false);
+                break;
+            case "SE":
+                yellowBoxnw.setVisible(false);
+                yellowBoxne.setVisible(false);
+                yellowBoxsw.setVisible(false);
+                yellowBoxse.setVisible(true);
+                break;
+            default:
+                yellowBoxnw.setVisible(false);
+                yellowBoxne.setVisible(false);
+                yellowBoxsw.setVisible(false);
+                yellowBoxse.setVisible(false);
+                break;
         }
     }
 
