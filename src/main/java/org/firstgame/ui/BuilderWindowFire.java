@@ -277,6 +277,12 @@ public class BuilderWindowFire extends JPanel implements MouseListener, MouseMot
         repaint();
     }
 
+    public static void quickPlay() {
+        BuilderWindowFire instance = getInstance();
+        instance.randomlyFill();
+        instance.goToNextLevelBuilder();
+    }
+
 }
 
 

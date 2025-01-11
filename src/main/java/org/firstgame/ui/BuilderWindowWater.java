@@ -289,4 +289,10 @@ public class BuilderWindowWater extends JPanel implements MouseListener, MouseMo
         }
         repaint();
     }
+
+    public static void quickPlay() {
+        BuilderWindowWater instance = getInstance();
+        instance.randomlyFill();
+        instance.goToNextLevelBuilder();
+    }
 }

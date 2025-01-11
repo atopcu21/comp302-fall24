@@ -236,6 +236,12 @@ public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMo
         repaint();
     }
 
+    public static void quickPlay() {
+        BuilderWindowEarth instance = getInstance();
+        instance.randomlyFill();
+        instance.goToNextLevelBuilder();
+    }
+
     public void goToNextLevelBuilder() {
         for (GameObject item : placedObjects) {
             item.setPosition(item.getPosition().getX() - 1.2, item.getPosition().getY() - 0.5);
@@ -299,6 +305,8 @@ public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMo
         }
         repaint();
     }
+
+
 
 
 

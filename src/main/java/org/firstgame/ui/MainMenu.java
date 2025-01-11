@@ -27,6 +27,9 @@ public class MainMenu extends JPanel {
         JLabel titleLabel = createLabel();
         this.add(titleLabel);
 
+        JButton quickStartButton = createButton("Quick", 28, 545, 390, 200, 60, this::quickPlayAll);
+        this.add(quickStartButton);
+
         JButton startButton = createButton("Start", 28, 545, 450, 200, 60, BuilderWindowEarth::getInstance);
         this.add(startButton);
 
@@ -38,6 +41,14 @@ public class MainMenu extends JPanel {
 
         JLabel imageLabel = createImageLabel("src/main/java/org/firstgame/assets/goRokue.png", 330, 10, 640, 360);
         this.add(imageLabel);
+    }
+
+    private void quickPlayAll() {
+        BuilderWindowEarth.quickPlay();
+        BuilderWindowAir.quickPlay();
+        BuilderWindowWater.quickPlay();
+        BuilderWindowFire.quickPlay();
+        
     }
 
     private JLabel createImageLabel(String filePath, int x, int y, int width, int height) {

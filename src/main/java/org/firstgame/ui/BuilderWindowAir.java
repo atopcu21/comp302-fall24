@@ -285,4 +285,9 @@ public class BuilderWindowAir extends JPanel implements MouseListener, MouseMoti
         }
         repaint();
     }
+    public static void quickPlay() {
+        BuilderWindowAir instance = getInstance();
+        instance.randomlyFill();
+        instance.goToNextLevelBuilder();
+    }
 }
