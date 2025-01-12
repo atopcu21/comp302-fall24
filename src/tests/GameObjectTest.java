@@ -42,4 +42,38 @@ public class GameObjectTest {
         player.checkForCollisions();
         assertEquals(2, player.getLives());
     }
+
+        @Test
+    public void tesCollisionWhenObjectsAreFar() {
+        // Set positions far apart
+        fighter.setPosition(new WorldPosition(100, 100));
+        player.setPosition(new WorldPosition(0, 0));
+        
+        player.checkForCollisions();
+        // Lives should remain the same since no collision happened
+        assertEquals(3, player.getLives());
+    }
+    
+    @Test
+    public void testCollisionWithCloakGrantsCloakToPlayer() {
+        GameObject cloak = new GameObject(new WorldPosition(1, 1), "src/main/java/org/firstgame/assets/cloak.png");
+        cloak.setPosition(player.getPosition()); // Simulate same position
+        
+        player.checkForCollisions();
+        
+        // Verify that the player has obtained the cloak
+        assertTrue(RokueLikeGame.getInstance().getPlayer().hasCloak());
+    }
+    
+    @Test
+    public void testPlayerFirstAidKitCollisionIncreasesLives() {
+        GameObject firstAidKit = new GameObject(new WorldPosition(2, 2), "src/main/java/org/firstgame/assets/firstAidKit.png");
+        firstAidKit.setPosition(player.getPosition()); // Place at the same position
+        
+        player.checkForCollisions();
+        
+        // Verify that player's life increased by 1
+        assertEquals(4, player.getLives());
+    }
+
 }
