@@ -1,5 +1,6 @@
 package org.firstgame.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.firstgame.properties.Constants;
@@ -26,6 +27,7 @@ public class Player extends GameObject {
         hasReveal = false;
         hasCloak = false;
         hasLuringGem = false;
+        inventory = new ArrayList<>();
     }
 
     @Override
@@ -105,4 +107,13 @@ public class Player extends GameObject {
     public void setHasLuringGem(boolean hasLuringGem) {
         this.hasLuringGem = hasLuringGem;
     }
+
+    boolean repOk() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public List<GameObject> getInventory() {
+        return inventory;
+    }
+
 }

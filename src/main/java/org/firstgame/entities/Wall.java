@@ -2,6 +2,7 @@ package org.firstgame.entities;
 
 import org.firstgame.properties.Constants;
 import org.firstgame.properties.Rotation;
+import org.firstgame.properties.WorldPosition;
 
 public class Wall extends GameObject {
     public Wall(Rotation direction, double x, double y) {
@@ -17,6 +18,10 @@ public class Wall extends GameObject {
         }
         setScale(3 ,3);
         setPosition(x, y);
+    }
+
+    Wall(WorldPosition worldPosition, String wallpng) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
