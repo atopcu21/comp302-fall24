@@ -315,6 +315,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         checkForCollisions();
         checkRuneFound();
         updateTime();
+        updateEnchantmentIcons();
         repaint();
         updateHealth(RokueLikeGame.getInstance().getPlayer().getLives());
         if(RokueLikeGame.getInstance().getPlayer().getLives() <= 0){
@@ -442,11 +443,15 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         List<GameObject> sceneObjects = new ArrayList<>(RokueLikeGame.getInstance().getGameObjects());
         for (GameObject gameObject : sceneObjects) {
             if(gameObject instanceof FighterMonster){
-                if(((System.currentTimeMillis() - startTime) / 1000) % 3 == 0){
-                    Random r = new Random();
-                    ((FighterMonster) gameObject).setRotation(new Rotation(r.nextInt(360)));
-                } else {
+                if(((FighterMonster) gameObject).isLured()) {
                     ((FighterMonster) gameObject).move();
+                } else {
+                    if(((System.currentTimeMillis() - startTime) / 1000) % 3 == 0){
+                        Random r = new Random();
+                        ((FighterMonster) gameObject).setRotation(new Rotation(r.nextInt(360)));
+                    } else {
+                        ((FighterMonster) gameObject).move();
+                    }
                 }
             } else if (gameObject instanceof WizardMonster) {
                 if(((System.currentTimeMillis() - startTime) / 1000) % 5 == 4){
@@ -477,6 +482,10 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                 if(((Arrow) gameObject).isOutOfRange){
                     RokueLikeGame.getInstance().getGameObjects().remove(gameObject);
                 }
+            } else if (gameObject instanceof Enchantment) {
+                if(((Enchantment) gameObject).getOwner() != null){
+                    ((Enchantment) gameObject).move();
+                }
             }
         }
     }
@@ -494,7 +503,6 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
             gameInstance.gameOver();
         } else{
             timeLabel.setText(gameInstance.getCurrentLevel() + " Hall / Time: " + formatTimeRemaining(gameInstance.getAdventureTime() - timeElapsed));
-        
         }
 
     }

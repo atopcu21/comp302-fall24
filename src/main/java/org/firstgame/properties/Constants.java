@@ -34,5 +34,10 @@ public class Constants {
     //key R
 
 
-    public static final Integer KEY_R = 82;
+    public static final Integer KEY_R_CODE = 82;
+    public static final Integer KEY_L_CODE = 76;
+    public static final Integer KEY_W_CODE = 87;
+    public static final Integer KEY_A_CODE = 65;
+    public static final Integer KEY_S_CODE = 83;
+    public static final Integer KEY_D_CODE = 68;
 }

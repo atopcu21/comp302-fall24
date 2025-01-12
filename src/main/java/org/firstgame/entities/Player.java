@@ -1,8 +1,8 @@
 package org.firstgame.entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.firstgame.RokueLikeGame;
 import org.firstgame.properties.Constants;
 import org.firstgame.properties.Rotation;
 
@@ -13,8 +13,6 @@ public class Player extends GameObject {
     private boolean hasReveal;
     private boolean hasCloak;
     private boolean hasLuringGem;
-
-
 
     private List<GameObject> inventory;
 
@@ -27,7 +25,6 @@ public class Player extends GameObject {
         hasReveal = false;
         hasCloak = false;
         hasLuringGem = false;
-        inventory = new ArrayList<>();
     }
 
     @Override
@@ -108,12 +105,12 @@ public class Player extends GameObject {
         this.hasLuringGem = hasLuringGem;
     }
 
-    boolean repOk() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void throwLuringGem(Rotation rotation) {
+        if (hasLuringGem) {
+            hasLuringGem = false;
+            Enchantment luringGem = new Enchantment("src/main/java/org/firstgame/assets/luringGem.png", this);
+            luringGem.setRotation(rotation);
+            RokueLikeGame.getInstance().addGameObject(luringGem);
+        }
     }
-
-    public List<GameObject> getInventory() {
-        return inventory;
-    }
-
 }

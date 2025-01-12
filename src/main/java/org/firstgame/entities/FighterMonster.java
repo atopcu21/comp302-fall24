@@ -7,6 +7,7 @@ import org.firstgame.properties.Rotation;
 import java.util.Random;
 
 public class FighterMonster extends Monster {
+    private boolean isLured = false;
     public FighterMonster() {
         super();
         setSprite(Constants.FIGHTER_SPRITE);
@@ -35,5 +36,13 @@ public class FighterMonster extends Monster {
 
     public void updatePosition(double x, double y) {
         setPosition(getPosition().getX() + x, getPosition().getY() + y);
+    }
+
+    public boolean isLured() {
+        return isLured;
+    }
+
+    public void setLured(boolean isLured) {
+        this.isLured = isLured;
     }
 }

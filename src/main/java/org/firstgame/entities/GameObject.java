@@ -183,14 +183,18 @@ public class GameObject {
             RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
         }
         
-        if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/luringGem.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+        if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/luringGem.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png") && ((Enchantment) otherObject).getOwner() == null) {
             RokueLikeGame.getInstance().removeAllEnchantments();
             RokueLikeGame.getInstance().getPlayer().setHasLuringGem(true);
             RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
-        } else if (this.getSprite().equals("src/main/java/org/firstgame/assets/luringGem.png") && otherObject.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
+        } else if (this.getSprite().equals("src/main/java/org/firstgame/assets/luringGem.png") && otherObject.getSprite().equals("src/main/java/org/firstgame/assets/player.png") && ((Enchantment) this).getOwner() == null) {
             RokueLikeGame.getInstance().removeAllEnchantments();
             RokueLikeGame.getInstance().getPlayer().setHasLuringGem(true);
             RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
+        } else if (this.getSprite().equals("src/main/java/org/firstgame/assets/luringGem.png") && ((Enchantment) this).getOwner() != null && !(otherObject instanceof Player)) {
+            ((Enchantment) this).breakGem();
+        } else if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/luringGem.png") && ((Enchantment) otherObject).getOwner() != null && !(this instanceof Player)) {
+            ((Enchantment) otherObject).breakGem();
         }
 
         if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/reveal.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
