@@ -11,6 +11,7 @@ public class Constants {
     public static final String WIZARD_SPRITE = "src/main/java/org/firstgame/assets/wizard.png";
     public static final String WIZARD_CHARGED_SPRITE = "src/main/java/org/firstgame/assets/wizard_charged.png";
     public static final String ARCHER_SPRITE = "src/main/java/org/firstgame/assets/archer.png";
+    public static final String PLAYER_CLOAKED_SPRITE = "src/main/java/org/firstgame/assets/player_cloaked.png";
     public static final String WALL_RIGHT_SPRITE = "src/main/java/org/firstgame/assets/wall_right.png";
     public static final String WALL_LEFT_SPRITE = "src/main/java/org/firstgame/assets/wall_left.png";
     public static final String WALL_UP_SPRITE = "src/main/java/org/firstgame/assets/wall_up.png";
@@ -40,4 +41,5 @@ public class Constants {
     public static final Integer KEY_A_CODE = 65;
     public static final Integer KEY_S_CODE = 83;
     public static final Integer KEY_D_CODE = 68;
+    public static final Integer KEY_C_CODE = 67;
 }
