@@ -3,7 +3,6 @@ package org.firstgame;
 import org.firstgame.entities.*;
 import org.firstgame.properties.Rotation;
 import org.firstgame.properties.WorldPosition;
-import org.firstgame.ui.BuilderWindowEarth;
 import org.firstgame.ui.GameOverScreen;
 import org.firstgame.ui.GameWindow;
 
@@ -11,13 +10,11 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.swing.*;
-import java.util.Iterator;
 
 import static org.firstgame.properties.Constants.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -297,12 +294,10 @@ public class RokueLikeGame {
                 if (currentTime - lastRKeyPressTime >= 1000) { // 1 second interval
                     // Message box that says "r is pressed"
                     if(RokueLikeGame.getInstance().getPlayer().isReveal()){
-                        RokueLikeGame.getInstance().getPlayer().setHasReveal(false);                    
+                        RokueLikeGame.getInstance().getPlayer().setHasReveal(false);
                         gameWindow.changeRuneHighlight();
                         lastRKeyPressTime = currentTime;
-
                     }
-
                 }
             } else if (activeKeys.contains(KEY_L_CODE)) {
                 if(RokueLikeGame.getInstance().getPlayer().isLuringGem()){
@@ -319,6 +314,10 @@ public class RokueLikeGame {
                     player.throwLuringGem(Rotation.RIGHT);
                 }
                 isLureEnchantActivated = false;
+            } else if (activeKeys.contains(KEY_C_CODE)) {
+                if(player.hasCloak()) {
+                    player.setCloaked();
+                }
             }
         } else if (activeKeys.size() == 2) {
             if (activeKeys.contains(KEY_LEFT_ARROW_CODE) && activeKeys.contains(KEY_UP_ARROW_CODE)) {
