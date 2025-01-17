@@ -10,6 +10,7 @@ import java.util.Random;
 public class ArcherMonster extends Monster {
     private boolean isFiring = false;
     private long timeCreated;
+    private WorldPosition lastTargetPosition = new WorldPosition(0, 0);
 
     public ArcherMonster() {
         super();
@@ -33,8 +34,21 @@ public class ArcherMonster extends Monster {
 
     public void fireArrow(GameObject targetObject) {
         if (isFiring) return;
-        double x = targetObject.getPosition().getX() - this.getPosition().getX();
-        double y = this.getPosition().getY() - targetObject.getPosition().getY();
+
+        double targetX;
+        double targetY;
+
+        if (targetObject instanceof Player && ((Player) targetObject).isCloaked()){
+            targetX = lastTargetPosition.getX();
+            targetY = lastTargetPosition.getY();
+        } else {
+            targetX = targetObject.getPosition().getX();
+            targetY = targetObject.getPosition().getY();
+            lastTargetPosition = new WorldPosition(targetX, targetY);
+        }
+
+        double x = targetX - this.getPosition().getX();
+        double y = this.getPosition().getY() - targetY;
         if(x == 0) {
             x += 0.0000000001;
         } else if(y == 0) {
