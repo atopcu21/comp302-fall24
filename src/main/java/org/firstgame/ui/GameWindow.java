@@ -5,7 +5,6 @@ import org.firstgame.entities.*;
 import org.firstgame.properties.*;
 
 import javax.imageio.ImageIO;
-import javax.print.attribute.standard.Media;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -22,8 +21,6 @@ import java.util.Random;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.sound.sampled.*;
-
-import java.io.File;
 
 
 public class GameWindow extends JPanel implements KeyListener, MouseListener {
@@ -59,7 +56,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
     private GameWindow() {
         luringGemLabel = createItemLabel("src/main/java/org/firstgame/assets/luringGem.png", RokueLikeGame.getInstance().getPlayer().isLuringGem());
-        cloakLabel = createItemLabel("src/main/java/org/firstgame/assets/cloak.png", RokueLikeGame.getInstance().getPlayer().isCloak());
+        cloakLabel = createItemLabel("src/main/java/org/firstgame/assets/cloak.png", RokueLikeGame.getInstance().getPlayer().hasCloak());
         revealLabel = createItemLabel("src/main/java/org/firstgame/assets/reveal.png", RokueLikeGame.getInstance().getPlayer().isReveal());
 
 
@@ -239,7 +236,6 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                         System.out.println(gameObject.getPosition().getX() + " " + gameObject.getPosition().getY());
                         String runePosition = "";
 
-
                         if(x<6 && y<6){
                             runePosition = "NW";
                         }
@@ -253,11 +249,11 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                             runePosition = "SE";
                         }
                         updateRunePosition(runePosition);
-    
-
 
                         //bi = increaseBrightness(bi, 50);
                         updateEnchantmentIcons(); 
+                    } else if (!highlightRune) {
+                        updateRunePosition("");
                     }
     
                     g.drawImage(bi,
@@ -399,6 +395,17 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 RokueLikeGame.getInstance().removeAllEnchantments();
+            }
+        });
+        timer.setRepeats(false); // Ensure the timer only runs once
+        timer.start();
+    }
+
+    private void scheduleRemoveHighlight() {
+        Timer timer = new Timer(2000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                highlightRune = false;
             }
         });
         timer.setRepeats(false); // Ensure the timer only runs once
@@ -643,7 +650,10 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
     }
 
     public void changeRuneHighlight() {
-        highlightRune = !highlightRune;
+        if (!highlightRune) {
+            highlightRune = true;
+            scheduleRemoveHighlight();
+        }
     }
 
     public void setBackgroundColor(Color color) {
@@ -703,7 +713,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                 e.printStackTrace();
             }
         }
-        if(player.isCloak()){
+        if(player.hasCloak()){
             try {
                 BufferedImage image = ImageIO.read(new File("src/main/java/org/firstgame/assets/cloak.png"));
                 cloakLabel.setIcon(new ImageIcon(image));
