@@ -1,10 +1,17 @@
 package org.firstgame.entities;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import org.firstgame.RokueLikeGame;
 import org.firstgame.properties.Constants;
 import org.firstgame.properties.Rotation;
+
+import javax.swing.*;
+
+import static org.firstgame.properties.Constants.PLAYER_CLOAKED_SPRITE;
+import static org.firstgame.properties.Constants.PLAYER_SPRITE;
 
 public class Player extends GameObject {
     private int lives;
@@ -12,6 +19,7 @@ public class Player extends GameObject {
     private boolean hasExtraTime;
     private boolean hasReveal;
     private boolean hasCloak;
+    private boolean isCloaked;
     private boolean hasLuringGem;
 
     private List<GameObject> inventory;
@@ -89,7 +97,7 @@ public class Player extends GameObject {
         this.hasReveal = hasReveal;
     }
     
-    public boolean isCloak() {
+    public boolean hasCloak() {
         return hasCloak;
     }
     
@@ -112,5 +120,30 @@ public class Player extends GameObject {
             luringGem.setRotation(rotation);
             RokueLikeGame.getInstance().addGameObject(luringGem);
         }
+    }
+
+    public boolean isCloaked() {
+        return isCloaked;
+    }
+
+    public void setCloaked() {
+        if(hasCloak) {
+            hasCloak = false;
+            setSprite(PLAYER_CLOAKED_SPRITE);
+            isCloaked = true;
+            scheduleRemoveCloak();
+        }
+    }
+
+    private void scheduleRemoveCloak() {
+        Timer timer = new Timer(6000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setSprite(PLAYER_SPRITE);
+                isCloaked = false;
+            }
+        });
+        timer.setRepeats(false); // Ensure the timer only runs once
+        timer.start();
     }
 }
