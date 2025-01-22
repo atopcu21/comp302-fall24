@@ -3,7 +3,9 @@ package org.firstgame.entities;
 import org.firstgame.properties.Constants;
 import org.firstgame.properties.Rotation;
 
-public class Wall extends GameObject {
+import java.io.Serializable;
+
+public class Wall extends GameObject implements Serializable {
     public Wall(Rotation direction, double x, double y) {
         setRotation(direction);
         if(direction == Rotation.RIGHT){

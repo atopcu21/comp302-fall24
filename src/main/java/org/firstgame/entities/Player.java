@@ -2,6 +2,7 @@ package org.firstgame.entities;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.List;
 
 import org.firstgame.RokueLikeGame;
@@ -13,7 +14,7 @@ import javax.swing.*;
 import static org.firstgame.properties.Constants.PLAYER_CLOAKED_SPRITE;
 import static org.firstgame.properties.Constants.PLAYER_SPRITE;
 
-public class Player extends GameObject {
+public class Player extends GameObject implements Serializable {
     private int lives;
     private int score;
     private boolean hasExtraTime;
@@ -21,6 +22,7 @@ public class Player extends GameObject {
     private boolean hasCloak;
     private boolean isCloaked;
     private boolean hasLuringGem;
+    private boolean isPassedThroughTheDoor;
 
     private List<GameObject> inventory;
 
@@ -145,5 +147,13 @@ public class Player extends GameObject {
         });
         timer.setRepeats(false); // Ensure the timer only runs once
         timer.start();
+    }
+
+    public void setPassedThroughTheDoor(boolean passedThroughTheDoor) {
+        isPassedThroughTheDoor = passedThroughTheDoor;
+    }
+
+    public boolean isPassedThroughTheDoor() {
+        return isPassedThroughTheDoor;
     }
 }

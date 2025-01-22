@@ -5,9 +5,10 @@ import org.firstgame.properties.Constants;
 import org.firstgame.properties.Rotation;
 import org.firstgame.properties.WorldPosition;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class ArcherMonster extends Monster {
+public class ArcherMonster extends Monster implements Serializable {
     private boolean isFiring = false;
     private long timeCreated;
     private WorldPosition lastTargetPosition = new WorldPosition(0, 0);

@@ -1,5 +1,7 @@
 package org.firstgame.ui;
 
+import org.firstgame.RokueLikeGame;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -13,6 +15,8 @@ public class MainMenu extends JPanel {
     private Image backgroundImage2;
     private boolean showFirstImage = true;
     private Timer timer;
+    private boolean isMultiplayer;
+    JButton multiPlayerButton;
 
     public MainMenu() {
         JFrame frame = new JFrame("Main Menu");
@@ -57,20 +61,32 @@ public class MainMenu extends JPanel {
         JLabel titleLabel = createLabel();
         this.add(titleLabel);
 
-        JButton quickStartButton = createButton("Quick", 28, 545, 390, 200, 60, this::quickPlayAll);
+        multiPlayerButton = createButton("<< 1P Mode >>", 28, 445, 390, 400, 55, this::changeMode);
+        this.add(multiPlayerButton);
+
+        JButton quickStartButton = createButton("Quick", 28, 445, 450, 195, 55, this::quickPlayAll);
         this.add(quickStartButton);
 
-        JButton startButton = createButton("Start", 28, 545, 450, 200, 60, BuilderWindowEarth::getInstance);
+        JButton startButton = createButton("Build", 28, 650, 450, 195, 55, this::startBuilder);
         this.add(startButton);
 
-        JButton helpButton = createButton("Help", 28, 545, 510, 200, 60, this::showHelpDialog);
+        JButton loadButton = createButton("Load Game", 28, 445, 510, 400, 55, this::loadGame);
+        this.add(loadButton);
+
+        JButton helpButton = createButton("Help", 28, 545, 570, 200, 55, this::showHelpDialog);
         this.add(helpButton);
 
-        JButton exitButton = createButton("Exit", 28, 545, 570, 200, 60, () -> System.exit(0));
+        JButton exitButton = createButton("Exit", 28, 545, 630, 200, 55, () -> System.exit(0));
         this.add(exitButton);
 
         JLabel imageLabel = createImageLabel("src/main/java/org/firstgame/assets/goRokue.png", 330, 10, 640, 360);
         this.add(imageLabel);
+    }
+
+    private void startBuilder() {
+        BuilderWindowEarth.getInstance();
+        Window win = SwingUtilities.getWindowAncestor(this);
+        win.dispose();
     }
 
     private void quickPlayAll() {
@@ -78,7 +94,8 @@ public class MainMenu extends JPanel {
         BuilderWindowAir.quickPlay();
         BuilderWindowWater.quickPlay();
         BuilderWindowFire.quickPlay();
-        
+        Window win = SwingUtilities.getWindowAncestor(this);
+        win.dispose();
     }
 
     private JLabel createImageLabel(String filePath, int x, int y, int width, int height) {
@@ -120,11 +137,28 @@ public class MainMenu extends JPanel {
     }
 
     private void showHelpDialog() {
+        // loadGame();
         JOptionPane.showMessageDialog(this, "Instructions:\nUse Arrow keys to move your hero.\nClick on object to find runes.\nYou can collect power-ups as you go.", "Help", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void changeMode() {
+        isMultiplayer = !isMultiplayer;
+        RokueLikeGame.setMultiplayer(isMultiplayer);
+        if (isMultiplayer) {
+            multiPlayerButton.setText("<< 2P Mode >>");
+            multiPlayerButton.updateUI();
+        } else {
+            multiPlayerButton.setText("<< 1P Mode >>");
+            multiPlayerButton.updateUI();
+        }
     }
 
     public void changeBackgroundColor(Color color) {
         setBackground(color);
         repaint();
+    }
+
+    public void loadGame() {
+        RokueLikeGame.getInstance().loadGameState();
     }
 }

@@ -1,4 +1,6 @@
 package org.firstgame.properties;
 
-public record ScreenPosition(int x, int y) {
+import java.io.Serializable;
+
+public record ScreenPosition(int x, int y) implements Serializable {
 }

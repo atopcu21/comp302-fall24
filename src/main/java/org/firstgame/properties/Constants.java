@@ -1,6 +1,8 @@
 package org.firstgame.properties;
 
-public class Constants {
+import java.io.Serializable;
+
+public class Constants implements Serializable {
     public static final Integer KEY_LEFT_ARROW_CODE = 37;
     public static final Integer KEY_UP_ARROW_CODE = 38;
     public static final Integer KEY_RIGHT_ARROW_CODE = 39;

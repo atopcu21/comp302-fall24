@@ -15,6 +15,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,22 +24,30 @@ import java.awt.event.ActionListener;
 import javax.sound.sampled.*;
 
 
-public class GameWindow extends JPanel implements KeyListener, MouseListener {
+public class GameWindow extends JPanel implements KeyListener, MouseListener, Serializable {
+    private Image backgroundImage1;
+    private Image backgroundImage2;
     private static GameWindow instance;
     private RokueLikeGame gameInstance;
     private final Timer gameTimer;
+    private final Timer gameSaver;
     private JLabel timeLabel;
     private JLabel runeLabel;
     private long startTime;
+    private long lastUpdatedTime;
     private boolean runeFound;
     private boolean monstersGenerating;
     private JPanel inventoryPanel;
-    private JPanel inventoryContainer;
+
     private JPanel healthPanel;
     private BufferedImage healthImage;
     private JLabel luringGemLabel;
     private JLabel cloakLabel;
     private JLabel revealLabel;
+
+    private Timer timer;
+
+    private boolean showFirstImage = true;
 
     private boolean enchantmentsGenerating = false;
 
@@ -55,13 +64,17 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
     private boolean highlightRune;
 
     private GameWindow() {
+
+        backgroundImage1 = new ImageIcon("src/main/java/org/firstgame/assets/taslak01.png").getImage();
+        backgroundImage2 = new ImageIcon("src/main/java/org/firstgame/assets/taslak02.png").getImage();
+
         luringGemLabel = createItemLabel("src/main/java/org/firstgame/assets/luringGem.png", RokueLikeGame.getInstance().getPlayer().isLuringGem());
         cloakLabel = createItemLabel("src/main/java/org/firstgame/assets/cloak.png", RokueLikeGame.getInstance().getPlayer().hasCloak());
         revealLabel = createItemLabel("src/main/java/org/firstgame/assets/reveal.png", RokueLikeGame.getInstance().getPlayer().isReveal());
 
 
         inventoryPanel = new JPanel();
-        inventoryPanel.setBackground(new Color(60, 60, 60, 128));
+        inventoryPanel.setOpaque(false);
         inventoryPanel.setPreferredSize(new Dimension(320, 420));
         inventoryPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 20)); // Top, left, bottom, right margins
         
@@ -72,12 +85,13 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         inventoryPanel.add(luringGemLabel);
         inventoryPanel.add(cloakLabel);
         inventoryPanel.add(revealLabel);
-
-
+        inventoryPanel.setBounds(900, 310, 200, 100); // Set the position and size (x, y, width, height)
         healthPanel = new JPanel();
-        healthPanel.setOpaque(false); // Make the health panel fully transparent
-        healthPanel.setBackground(new Color(0, 0, 0, 0)); // Ensure no background color
+        healthPanel.setOpaque(false); // Make the health panel fully transparent// Ensure no background color
+        healthPanel.setBounds(890, 280, 200, 100); // Set the position and size (x, y, width, height)
         
+        add(healthPanel);
+        add(inventoryPanel);
         
         try {
             healthImage = ImageIO.read(new File("src/main/java/org/firstgame/assets/heart.png")); // Load the health image
@@ -92,14 +106,6 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
         JFrame frame = new JFrame("Rokue Like Game");
 
-
-        inventoryContainer = new JPanel(new BorderLayout());
-        inventoryContainer.setBorder(BorderFactory.createEmptyBorder(80, 0, 80, 100)); // Top, left, bottom, right margins
-        inventoryContainer.add(healthPanel, BorderLayout.CENTER);
-        inventoryContainer.add(inventoryPanel, BorderLayout.SOUTH);
-        inventoryContainer.setBackground(getBackground());
-        
-        frame.add(inventoryContainer, BorderLayout.EAST);
 
 
         frame.add(this);
@@ -144,14 +150,16 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         yellowBoxse.setVisible(false);
         this.add(yellowBoxse);
 
-
-
-
         addMouseListener(this);
 
         gameTimer = new Timer(16, e -> updateScreen());
         gameTimer.start();
         startTime = System.currentTimeMillis();
+
+        lastUpdatedTime = startTime;
+
+        gameSaver = new Timer(5000, e -> saveGameStateRegularly());
+        gameSaver.start();
 
         timeLabel = new JLabel("Time: 0 seconds");
         timeLabel.setBounds((getWidth() / 2) - 200, 10, 400, 30);
@@ -179,6 +187,14 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
         this.add(timeLabel);
         this.add(runeLabel);
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showFirstImage = !showFirstImage;
+                repaint();
+            }
+        });
+        timer.start();
     }
 
     public void setGameInstance(RokueLikeGame gameInstance) {
@@ -192,9 +208,18 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         return instance;
     }
 
+    public static void resetInstance() {
+        instance = null;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        if (showFirstImage) {
+            g.drawImage(backgroundImage1, 0, 0, getWidth(), getHeight(), this);
+        } else {
+            g.drawImage(backgroundImage2, 0, 0, getWidth(), getHeight(), this);
+        }
         if (gameInstance != null) {
             for (GameObject gameObject : gameInstance.getGameObjects()) {
                 BufferedImage image = null;
@@ -304,7 +329,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
     }
 
     public void updateScreen() {
-        RokueLikeGame.getInstance().movePlayer();
+        RokueLikeGame.getInstance().movePlayers();
         generateMonsters();
         generateEnchantments();
         moveMonsters();
@@ -314,6 +339,12 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         updateEnchantmentIcons();
         repaint();
         updateHealth(RokueLikeGame.getInstance().getPlayer().getLives());
+        if(RokueLikeGame.getInstance().isMultiplayer()) {
+            if(RokueLikeGame.getInstance().getPlayer2() != null
+                    && RokueLikeGame.getInstance().getPlayer2().getLives() <= 0) {
+                RokueLikeGame.getInstance().gameOver();
+            }
+        }
         if(RokueLikeGame.getInstance().getPlayer().getLives() <= 0){
             RokueLikeGame.getInstance().gameOver();
         }
@@ -321,8 +352,6 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
 
     public void checkForCollisions() {
         for (GameObject gameObject : RokueLikeGame.getInstance().getGameObjects()) {
-
-
             gameObject.checkForCollisions();
         }
     }
@@ -340,11 +369,11 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                 Enchantment enchantment = null;
                 switch (i) {
                     case 0: {
-                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/time.png");
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/cloak.png");
                         break;
                     }
                     case 1: {
-                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/luringGem.png");
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/cloak.png");
                         break;
                     }
                     case 2: {
@@ -352,11 +381,11 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                         break;
                     }
                     case 3: {
-                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/cloak.png");
                         break;
                     }
                     case 4: {
-                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/firstAidKit.png");
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/cloak.png");
                         break;
                     }
 
@@ -426,7 +455,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                 GameObject monster = null;
                 switch (i) {
                     case 0: {
-                        monster = new FighterMonster();
+                        monster = new ArcherMonster();
                         break;
                     }
                     case 1: {
@@ -434,7 +463,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                         break;
                     }
                     case 2: {
-                        monster = new WizardMonster();
+                        monster = new ArcherMonster();
                         break;
                     }
                 }
@@ -461,25 +490,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                     }
                 }
             } else if (gameObject instanceof WizardMonster) {
-                if(((System.currentTimeMillis() - startTime) / 1000) % 5 == 4){
-                    List<GameObject> runeCarryingObjects = RokueLikeGame.getInstance()
-                            .getGameObjects()
-                            .stream()
-                            .filter(it -> it.canHaveRuneInIt() && !it.hasRune()).toList();
-                    List<GameObject> theRune = RokueLikeGame.getInstance()
-                            .getGameObjects()
-                            .stream()
-                            .filter(it -> it.canHaveRuneInIt() && it.hasRune()).toList();
-                    if(!theRune.isEmpty()){
-                        theRune.get(0).setHasRune(false);
-                        Random r = new Random();
-                        int n = r.nextInt(runeCarryingObjects.size());
-                        runeCarryingObjects.get(n).setHasRune(true);
-                        gameObject.setSprite(Constants.WIZARD_CHARGED_SPRITE);
-                    }
-                } else if(((System.currentTimeMillis() - startTime) / 1000) % 5 == 0){
-                    gameObject.setSprite(Constants.WIZARD_SPRITE);
-                }
+                ((WizardMonster) gameObject).updateBehavior();
             } else if (gameObject instanceof ArcherMonster) {
                 if(((System.currentTimeMillis() - ((ArcherMonster) gameObject).getTimeCreated()) / 1000) % 2 == 1){
                     ((ArcherMonster) gameObject).fireArrow(RokueLikeGame.getInstance().getPlayer());
@@ -504,12 +515,13 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
     }
 
     public void updateTime() {
-        long timeElapsed = (System.currentTimeMillis() - startTime) / 1000;
-        if(gameInstance.getAdventureTime() - timeElapsed <= 0){
+        gameInstance.setAdventureTime(gameInstance.getAdventureTime() - (System.currentTimeMillis() - lastUpdatedTime));
+        lastUpdatedTime = System.currentTimeMillis();
+        if(gameInstance.getAdventureTime() <= 0){
             timeLabel.setText("Game Over");
             gameInstance.gameOver();
         } else{
-            timeLabel.setText(gameInstance.getCurrentLevel() + " Hall / Time: " + formatTimeRemaining(gameInstance.getAdventureTime() - timeElapsed));
+            timeLabel.setText(gameInstance.getCurrentLevel() + " Hall / Time: " + formatTimeRemaining(gameInstance.getAdventureTime() / 1000));
         }
 
     }
@@ -656,11 +668,9 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
         }
     }
 
-    public void setBackgroundColor(Color color) {
-        setBackground(color);
-        if (inventoryContainer != null) {
-            inventoryContainer.setBackground(color);
-        }
+    public void setBackgroundOfGW(String file1, String file2) {
+        backgroundImage1 = new ImageIcon(file1).getImage();
+        backgroundImage2 = new ImageIcon(file2).getImage();
         repaint();
     }
     public void updateHealth(int lives) {
@@ -744,5 +754,9 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void saveGameStateRegularly(){
+        RokueLikeGame.getInstance().saveGameState();
     }
 }

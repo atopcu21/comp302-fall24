@@ -4,7 +4,9 @@ import org.firstgame.properties.Constants;
 import org.firstgame.properties.Rotation;
 import org.firstgame.properties.WorldPosition;
 
-public class Arrow extends GameObject {
+import java.io.Serializable;
+
+public class Arrow extends GameObject implements Serializable {
     public WorldPosition initialPosition;
     public boolean isOutOfRange = false;
     public ArcherMonster owner;
@@ -16,7 +18,7 @@ public class Arrow extends GameObject {
         setRotation(rotation);
         setFacingDirection(rotation);
         this.owner = owner;
-        this.initialPosition = worldPosition;
+        this.initialPosition = new WorldPosition(worldPosition.getX(), worldPosition.getY());
     }
 
     public void move() {
@@ -24,7 +26,7 @@ public class Arrow extends GameObject {
         double deltaX = Math.sin(Math.toRadians(getRotation().getAngle())) / 11;
         double deltaY = Math.cos(Math.toRadians(getRotation().getAngle())) / 11;
         updatePosition(deltaX, -deltaY);
-        if (checkDifferenceBetweenPositions(getPosition(), initialPosition) > 1){
+        if (checkDifferenceBetweenPositions(getPosition(), initialPosition) > 3){
             isOutOfRange = true;
             owner.endFiring();
         }

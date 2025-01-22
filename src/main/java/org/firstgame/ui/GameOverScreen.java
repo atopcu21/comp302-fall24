@@ -32,12 +32,12 @@ public class GameOverScreen extends JPanel {
         add(gameOverLabel);
 
         // Create buttons with larger/bolder font
-        JButton retryButton = createButton("Retry", 540, 300, 200, 60, this::retryGame);
+        // JButton retryButton = createButton("Retry", 540, 300, 200, 60, this::retryGame);
         JButton mainMenuButton = createButton("Main Menu", 540, 400, 200, 60, this::goToMainMenu);
         JButton exitButton = createButton("Exit", 540, 500, 200, 60, () -> System.exit(0));
 
         // Add buttons to the panel
-        add(retryButton);
+        // add(retryButton);
         add(mainMenuButton);
         add(exitButton);
 
@@ -69,6 +69,9 @@ public class GameOverScreen extends JPanel {
     } 
 
     private void goToMainMenu() {
+        GameWindow.resetInstance();
+        RokueLikeGame.resetInstance();
+        RokueLikeGame.setMultiplayer(false);
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         parentFrame.dispose();  // Close the Game Over screen
         new MainMenu();  // Go back to the main menu

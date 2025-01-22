@@ -4,9 +4,10 @@ import org.firstgame.RokueLikeGame;
 import org.firstgame.properties.Rotation;
 import org.firstgame.properties.WorldPosition;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Enchantment extends GameObject {
+public class Enchantment extends GameObject implements Serializable {
     private String sprite;
     private Player owner;
     private WorldPosition initialPosition;

@@ -1,6 +1,8 @@
 package org.firstgame.properties;
 
-public class Rotation {
+import java.io.Serializable;
+
+public class Rotation implements Serializable {
     public static final Rotation LEFT = new Rotation(270);
     public static final Rotation UP_LEFT = new Rotation(315);
     public static final Rotation UP = new Rotation(0);

@@ -4,9 +4,10 @@ import org.firstgame.RokueLikeGame;
 import org.firstgame.properties.Constants;
 import org.firstgame.properties.Rotation;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class FighterMonster extends Monster {
+public class FighterMonster extends Monster implements Serializable {
     private boolean isLured = false;
     public FighterMonster() {
         super();

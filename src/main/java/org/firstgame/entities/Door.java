@@ -4,7 +4,9 @@ import org.firstgame.RokueLikeGame;
 import org.firstgame.properties.Constants;
 import org.firstgame.properties.Rotation;
 
-public class Door extends GameObject {
+import java.io.Serializable;
+
+public class Door extends GameObject implements Serializable {
     private boolean isOpened;
 
     public Door(double x, double y) {
@@ -25,6 +27,7 @@ public class Door extends GameObject {
     public void onCollusion(GameObject otherObject) {
         super.onCollusion(otherObject);
         if(isOpened && (otherObject instanceof Player)) {
+            ((Player) otherObject).setPassedThroughTheDoor(true);
             RokueLikeGame.getInstance().winGame();
         } else if (!isOpened) {
             otherObject.move(Rotation.UP);

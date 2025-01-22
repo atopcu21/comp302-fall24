@@ -1,12 +1,6 @@
 package org.firstgame.ui;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -18,11 +12,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 import org.firstgame.RokueLikeGame;
 import org.firstgame.entities.GameObject;
@@ -240,6 +230,8 @@ public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMo
         BuilderWindowEarth instance = getInstance();
         instance.randomlyFill();
         instance.goToNextLevelBuilder();
+        Window win = SwingUtilities.getWindowAncestor(getInstance());
+        win.dispose();
     }
 
     public void goToNextLevelBuilder() {
@@ -248,7 +240,7 @@ public class BuilderWindowEarth extends JPanel implements MouseListener, MouseMo
         }
         Random r = new Random();
         placedObjects.get(r.nextInt(placedObjects.size())).setHasRune(true);
-        RokueLikeGame.getInstance().addGameObjects(placedObjects, "Earth");
+        RokueLikeGame.getInstance().setGameObjects(placedObjects, "Earth");
         BuilderWindowAir.getInstance();
     }
 

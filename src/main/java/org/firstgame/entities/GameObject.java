@@ -13,9 +13,10 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 
 
-public class GameObject {
+public class GameObject implements Serializable {
     private WorldPosition worldPosition;
     private Rotation rotation;
     private Rotation facingDirection;
@@ -209,11 +210,11 @@ public class GameObject {
 
         if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/time.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
             RokueLikeGame.getInstance().removeAllEnchantments();
-            RokueLikeGame.getInstance().addAdventureTime(5);
+            RokueLikeGame.getInstance().addAdventureTime(5000L);
             RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
         } else if (this.getSprite().equals("src/main/java/org/firstgame/assets/time.png") && otherObject.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {
             RokueLikeGame.getInstance().removeAllEnchantments();
-            RokueLikeGame.getInstance().addAdventureTime(5);
+            RokueLikeGame.getInstance().addAdventureTime(5000L);
             RokueLikeGame.getInstance().getGameWindow().updateEnchantmentIcons();
         }
         if (otherObject.getSprite().equals("src/main/java/org/firstgame/assets/firstAidKit.png") && this.getSprite().equals("src/main/java/org/firstgame/assets/player.png")) {

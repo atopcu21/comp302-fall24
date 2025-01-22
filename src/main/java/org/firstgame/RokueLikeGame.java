@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.io.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,26 +20,35 @@ import javax.swing.*;
 import static org.firstgame.properties.Constants.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class RokueLikeGame {
+public class RokueLikeGame implements Serializable {
     private static RokueLikeGame instance;
     private List<GameObject> gameObjectsEarth = new CopyOnWriteArrayList<>();
     private List<GameObject> gameObjectsAir = new CopyOnWriteArrayList<>();
     private List<GameObject> gameObjectsFire = new CopyOnWriteArrayList<>();
     private List<GameObject> gameObjectsWater = new CopyOnWriteArrayList<>();
 
-
-    private GameWindow gameWindow;
     private Set<Integer> activeKeys = new HashSet<>();
+    private Set<Integer> activeKeysSecondPlayer = new HashSet<>();
     private Player player;
+    private Player player2;
+    private static boolean isMultiplayer;
     private long adventureTime;
+    private long totalTime;
     private boolean isGameOver;
     private String currentLevel = "Earth";
     private boolean isLureEnchantActivated = false;
     private WorldPosition gemBrokeAtPosition;
 
-    private RokueLikeGame() {
-        createGameObjects();
-        createPlayer();
+    public static void resetInstance() {
+        instance = null;
+    }
+
+    public static void setMultiplayer(boolean isMultiplayer) {
+        RokueLikeGame.isMultiplayer = isMultiplayer;
+    }
+
+    public static boolean isMultiplayer() {
+        return isMultiplayer;
     }
 
     public boolean repOk() {
@@ -87,8 +97,6 @@ public class RokueLikeGame {
         return instance;
     }
 
-    
-
     public void createPlayer(){
         player = new Player();
         switch (currentLevel) {
@@ -99,8 +107,15 @@ public class RokueLikeGame {
         }
     }
 
-    public void createGameObjects(){
-
+    public void createSecondPlayer() {
+        player2 = new Player();
+        player2.setPosition(2,1);
+        switch (currentLevel) {
+            case "Earth" -> gameObjectsEarth.add(player2);
+            case "Air"   -> gameObjectsAir.add(player2);
+            case "Fire"  -> gameObjectsFire.add(player2);
+            case "Water" -> gameObjectsWater.add(player2);
+        }
     }
 
     public boolean isGameOver() {
@@ -109,21 +124,39 @@ public class RokueLikeGame {
 
     public void initGame(){
         isGameOver = false;
+        createPlayer();
+        if (isMultiplayer) {
+            createSecondPlayer();
+        }
         initGameWindow();
         initGameTimer();
         initGameObjects();
-        gameWindow.setBackgroundColor(new Color(34, 139, 34)); // Green for Earth
+        //GameWindow.getInstance().setBackgroundColor(new Color(34, 139, 34)); // Green for Earth
+    }
+
+    public void initGameFromSave(){
+        activeKeys.clear();
+        if ("Earth".equals(currentLevel)) {
+            GameWindow.getInstance().setBackgroundOfGW("src/main/java/org/firstgame/assets/taslak01.png", "src/main/java/org/firstgame/assets/taslak02.png");
+        }
+        else if ("Air".equals(currentLevel)) {
+            GameWindow.getInstance().setBackgroundOfGW("src/main/java/org/firstgame/assets/taslak03.png", "src/main/java/org/firstgame/assets/taslak04.png");
+         } // Light blue for Air
+        else if ("Water".equals(currentLevel)) {
+            GameWindow.getInstance().setBackgroundOfGW("src/main/java/org/firstgame/assets/wata.png","src/main/java/org/firstgame/assets/wata2.png");
+        }
+        else if ("Fire".equals(currentLevel)) {
+            GameWindow.getInstance().setBackgroundOfGW("src/main/java/org/firstgame/assets/fire.png","src/main/java/org/firstgame/assets/fire2.png"); // Orange-Red for Fire
+        }
     }
 
     public void initGameWindow(){
-        if(gameWindow == null){
-            gameWindow = GameWindow.getInstance();
-        }
-        gameWindow.setGameInstance(this);
+        GameWindow.getInstance().setGameInstance(RokueLikeGame.getInstance());
     }
 
     public void initGameTimer(){
-        adventureTime = gameObjectsEarth.size() * 5L;
+        adventureTime = (gameObjectsEarth.size() - 1) * 5000L;
+        totalTime = adventureTime;
     }
 
     public void initGameObjects(){
@@ -193,16 +226,24 @@ public class RokueLikeGame {
         };
     }
 
-    public void setGameObjects(List<GameObject> gameObjects) {
-
-    }
-
-    public void addGameObjects(List<GameObject> gameObject, String level) {
+    public void setGameObjects(List<GameObject> gameObjects, String level) {
         switch (level) {
-            case "Earth" -> this.gameObjectsEarth.addAll(gameObject);
-            case "Air" -> this.gameObjectsAir.addAll(gameObject);
-            case "Fire" -> this.gameObjectsFire.addAll(gameObject);
-            case "Water" -> this.gameObjectsWater.addAll(gameObject);
+            case "Earth" -> {
+                this.gameObjectsEarth.clear();
+                this.gameObjectsEarth.addAll(gameObjects);
+            }
+            case "Air" -> {
+                this.gameObjectsAir.clear();
+                this.gameObjectsAir.addAll(gameObjects);
+            }
+            case "Fire" -> {
+                this.gameObjectsFire.clear();
+                this.gameObjectsFire.addAll(gameObjects);
+            }
+            case "Water" -> {
+                this.gameObjectsWater.clear();
+                this.gameObjectsWater.addAll(gameObjects);
+            }
         }
     }
 
@@ -216,46 +257,65 @@ public class RokueLikeGame {
     }
 
     public GameWindow getGameWindow() {
-        return gameWindow;
+        return GameWindow.getInstance();
     }
-
-    public void setGameWindow(GameWindow gameWindow) {
-        this.gameWindow = gameWindow;
-    }
-
+    
     public void keyPressTriggered(Integer keyCode){
-        activeKeys.add(keyCode);
+        if(isMultiplayer) {
+            if (keyCode.equals(KEY_A_CODE) || keyCode.equals(KEY_D_CODE) || keyCode.equals(KEY_S_CODE) || keyCode.equals(KEY_W_CODE)) {
+                activeKeysSecondPlayer.add(keyCode);
+            } else activeKeys.add(keyCode);
+        } else {
+            activeKeys.add(keyCode);
+        }
     }
 
     public void keyReleaseTriggered(Integer keyCode){
-        activeKeys.remove(keyCode);
+        if(isMultiplayer) {
+            if (keyCode.equals(KEY_A_CODE) || keyCode.equals(KEY_D_CODE) || keyCode.equals(KEY_S_CODE) || keyCode.equals(KEY_W_CODE)) {
+                activeKeysSecondPlayer.remove(keyCode);
+            } else activeKeys.remove(keyCode);
+        } else {
+            activeKeys.remove(keyCode);
+        }
     }
 
     public long getAdventureTime() {
         return adventureTime;
     }
 
+    public void setAdventureTime(long adventureTime) {
+        this.adventureTime = adventureTime;
+    }
+
     public void addAdventureTime(long adventureTime) {
         this.adventureTime += adventureTime;
+        totalTime += adventureTime;
     }
 
     public void addAdventureTime() {
         switch (currentLevel) {
-            case "Earth" -> addAdventureTime(gameObjectsEarth.size() * 5L);
-            case "Air" -> addAdventureTime(gameObjectsAir.size() * 5L);
-            case "Fire" -> addAdventureTime(gameObjectsFire.size() * 5L);
-            case "Water" -> addAdventureTime(gameObjectsWater.size() * 5L);
+            case "Earth" -> addAdventureTime(gameObjectsEarth.size() * 5000L);
+            case "Air" -> addAdventureTime(gameObjectsAir.size() * 5000L);
+            case "Fire" -> addAdventureTime(gameObjectsFire.size() * 5000L);
+            case "Water" -> addAdventureTime(gameObjectsWater.size() * 5000L);
         }
     }
 
     public void gameOver() {
         isGameOver = true;
         activeKeys.clear();
-        for (KeyListener keyListener : gameWindow.getKeyListeners()) {
-            gameWindow.removeKeyListener(keyListener);
+        for (KeyListener keyListener : GameWindow.getInstance().getKeyListeners()) {
+            GameWindow.getInstance().removeKeyListener(keyListener);
         }
-        gameWindow.stopTimer();
-        SwingUtilities.invokeLater(GameOverScreen::new);  // Display the game over screen
+        GameWindow.getInstance().stopTimer();
+        showGameOverScreen();
+    }
+
+    private void showGameOverScreen() {
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(GameWindow.getInstance());
+        parentFrame.dispose();
+        SwingUtilities.invokeLater(GameOverScreen::new);
     }
 
     public void resetGame() {
@@ -269,13 +329,19 @@ public class RokueLikeGame {
         gameObjectsEarth.clear();
         gameObjectsAir.clear();
         gameObjectsFire.clear();
-        gameObjectsWater.clear();  
+        gameObjectsWater.clear();
     }
-    
 
     private long lastRKeyPressTime = 0;
 
-    public void movePlayer() {
+    public void movePlayers() {
+        moveSinglePlayerControls(player);
+        if (isMultiplayer && player2 != null) {
+            moveSecondPlayerControls(player2);
+        }
+    }
+
+    public void moveSinglePlayerControls(Player player) {
         if(activeKeys.isEmpty()){
             return;
         } else if(activeKeys.size() == 1) {
@@ -295,28 +361,30 @@ public class RokueLikeGame {
                     // Message box that says "r is pressed"
                     if(RokueLikeGame.getInstance().getPlayer().isReveal()){
                         RokueLikeGame.getInstance().getPlayer().setHasReveal(false);
-                        gameWindow.changeRuneHighlight();
+                        GameWindow.getInstance().changeRuneHighlight();
                         lastRKeyPressTime = currentTime;
                     }
                 }
-            } else if (activeKeys.contains(KEY_L_CODE)) {
-                if(RokueLikeGame.getInstance().getPlayer().isLuringGem()){
-                    isLureEnchantActivated = true;
-                }
-            } else if (isLureEnchantActivated) {
-                if(activeKeys.contains(KEY_W_CODE)) {
-                    player.throwLuringGem(Rotation.UP);
-                } else if (activeKeys.contains(KEY_S_CODE)) {
-                    player.throwLuringGem(Rotation.DOWN);
-                } else if (activeKeys.contains(KEY_A_CODE)) {
-                    player.throwLuringGem(Rotation.LEFT);
-                } else if (activeKeys.contains(KEY_D_CODE)) {
-                    player.throwLuringGem(Rotation.RIGHT);
-                }
-                isLureEnchantActivated = false;
             } else if (activeKeys.contains(KEY_C_CODE)) {
-                if(player.hasCloak()) {
+                if (player.hasCloak()) {
                     player.setCloaked();
+                }
+            } else if (!isMultiplayer) {
+                if (activeKeys.contains(KEY_L_CODE)) {
+                    if(RokueLikeGame.getInstance().getPlayer().isLuringGem()){
+                        isLureEnchantActivated = true;
+                    }
+                } else if (isLureEnchantActivated) {
+                    if(activeKeys.contains(KEY_W_CODE)) {
+                        player.throwLuringGem(Rotation.UP);
+                    } else if (activeKeys.contains(KEY_S_CODE)) {
+                        player.throwLuringGem(Rotation.DOWN);
+                    } else if (activeKeys.contains(KEY_A_CODE)) {
+                        player.throwLuringGem(Rotation.LEFT);
+                    } else if (activeKeys.contains(KEY_D_CODE)) {
+                        player.throwLuringGem(Rotation.RIGHT);
+                    }
+                    isLureEnchantActivated = false;
                 }
             }
         } else if (activeKeys.size() == 2) {
@@ -336,30 +404,75 @@ public class RokueLikeGame {
         }
     }
 
+    private void moveSecondPlayerControls(Player p) {
+        if(activeKeysSecondPlayer.isEmpty()){
+            return;
+        } else if(activeKeysSecondPlayer.size() == 1) {
+            if (activeKeysSecondPlayer.contains(KEY_A_CODE)) {
+                p.move(Rotation.LEFT);
+                p.setFacingDirection(Rotation.LEFT);
+            }
+            else if (activeKeysSecondPlayer.contains(KEY_D_CODE)) {
+                p.move(Rotation.RIGHT);
+                p.setFacingDirection(Rotation.RIGHT);
+            }
+            else if (activeKeysSecondPlayer.contains(KEY_W_CODE)) {
+                p.move(Rotation.UP);
+            }
+            else if (activeKeysSecondPlayer.contains(KEY_S_CODE)) {
+                p.move(Rotation.DOWN);
+            }
+        } else if (activeKeysSecondPlayer.size() == 2) {
+            if (activeKeysSecondPlayer.contains(KEY_A_CODE) && activeKeysSecondPlayer.contains(KEY_W_CODE)) {
+                p.move(Rotation.UP_LEFT);
+                p.setFacingDirection(Rotation.LEFT);
+            } else if (activeKeysSecondPlayer.contains(KEY_D_CODE) && activeKeysSecondPlayer.contains(KEY_W_CODE)) {
+                p.move(Rotation.UP_RIGHT);
+                p.setFacingDirection(Rotation.RIGHT);
+            } else if (activeKeysSecondPlayer.contains(KEY_D_CODE) && activeKeysSecondPlayer.contains(KEY_S_CODE)) {
+                p.move(Rotation.DOWN_RIGHT);
+                p.setFacingDirection(Rotation.RIGHT);
+            } else if (activeKeysSecondPlayer.contains(KEY_A_CODE) && activeKeysSecondPlayer.contains(KEY_S_CODE)) {
+                p.move(Rotation.DOWN_LEFT);
+                p.setFacingDirection(Rotation.LEFT);
+            }
+        }
+    }
+
     public Player getPlayer() {
         return player;
     }
 
+    public Player getPlayer2() {
+        return player2;
+    }
+
     public void winGame() {
+        if (isMultiplayer) {
+            if (!bothPlayersAtDoor()) {
+                return;
+            }
+        }
+
         switch (currentLevel) {
             case "Earth" -> {
                 currentLevel = "Air";
-                gameWindow.setBackgroundColor(new Color(135, 206, 235)); // Light blue for Air
+                GameWindow.getInstance().setBackgroundOfGW("src/main/java/org/firstgame/assets/taslak03.png", "src/main/java/org/firstgame/assets/taslak04.png");
                 break;
             }
             case "Air" -> {
                 currentLevel = "Water";
-                gameWindow.setBackgroundColor(new Color(0, 0, 255)); // Blue for Water
+                GameWindow.getInstance().setBackgroundOfGW("src/main/java/org/firstgame/assets/wata.png","src/main/java/org/firstgame/assets/wata2.png"); 
                 break;
             }
             case "Water" -> {
                 currentLevel = "Fire";
-                gameWindow.setBackgroundColor(new Color(255, 69, 0)); // Orange-Red for Fire
+                GameWindow.getInstance().setBackgroundOfGW("src/main/java/org/firstgame/assets/fire.png","src/main/java/org/firstgame/assets/fire2.png"); 
                 break;
             }
             case "Fire" -> {
                 currentLevel = "Finished";
-                JOptionPane.showMessageDialog(gameWindow, "Congratulations! You have won the game!", "Game Won", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(GameWindow.getInstance(), "Congratulations! You have won the game!", "Game Won", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
                 break;
             }
@@ -367,10 +480,16 @@ public class RokueLikeGame {
                 return;
             }
         }
-        gameWindow.winGame();
+        GameWindow.getInstance().winGame();
         initWalls();
-        createGameObjects();
         createPlayer();
+        if (isMultiplayer) {
+            createSecondPlayer();
+        }
+    }
+
+    private boolean bothPlayersAtDoor(){
+        return player.isPassedThroughTheDoor() && player2.isPassedThroughTheDoor();
     }
 
     public String getCurrentLevel() {
@@ -458,5 +577,39 @@ public class RokueLikeGame {
         });
         timer.setRepeats(false); // Ensure the timer only runs once
         timer.start();
+    }
+
+    public void saveGameState() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("savedGameState.ku"))) {
+            out.writeObject(this);
+            System.out.println("Game state saved successfully to " + "savedGameState.ku");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Failed to save game state.");
+        }
+    }
+
+    public void loadGameState() {
+        File file = new File("savedGameState.ku");
+        if (!file.exists()) {
+            System.err.println("Save file does not exist. Cannot load game state.");
+            return;
+        }
+
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+            RokueLikeGame loadedGame = (RokueLikeGame) in.readObject();
+            RokueLikeGame.instance = loadedGame;
+            RokueLikeGame.setMultiplayer(loadedGame.player2 != null);
+            GameWindow.getInstance().setGameInstance(loadedGame);
+            System.out.println("Game state loaded successfully from " + "savedGameState.ku");
+            initGameFromSave();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            System.err.println("Failed to load game state.");
+        }
+    }
+
+    public long getTotalTime() {
+        return totalTime;
     }
 }

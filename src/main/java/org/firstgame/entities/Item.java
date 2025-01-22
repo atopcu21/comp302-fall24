@@ -1,6 +1,8 @@
 package org.firstgame.entities;
 
-public class Item extends GameObject {
+import java.io.Serializable;
+
+public class Item extends GameObject implements Serializable {
 
     @Override
     public void onCollusion(GameObject otherObject) {

@@ -1,6 +1,8 @@
 package org.firstgame.properties;
 
-public class WorldPosition {
+import java.io.Serializable;
+
+public class WorldPosition implements Serializable {
     private double x;
     private double y;
     public WorldPosition(double x, double y) {
