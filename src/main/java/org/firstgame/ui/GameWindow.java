@@ -369,7 +369,7 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener, Se
                 Enchantment enchantment = null;
                 switch (i) {
                     case 0: {
-                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/cloak.png");
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
                         break;
                     }
                     case 1: {
@@ -377,15 +377,15 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener, Se
                         break;
                     }
                     case 2: {
-                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/cloak.png");
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/luringGem.png");
                         break;
                     }
                     case 3: {
-                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/cloak.png");
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/reveal.png");
                         break;
                     }
                     case 4: {
-                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/cloak.png");
+                        enchantment = new Enchantment("src/main/java/org/firstgame/assets/time.png");
                         break;
                     }
 
@@ -459,11 +459,11 @@ public class GameWindow extends JPanel implements KeyListener, MouseListener, Se
                         break;
                     }
                     case 1: {
-                        monster = new ArcherMonster();
+                        monster = new FighterMonster();
                         break;
                     }
                     case 2: {
-                        monster = new ArcherMonster();
+                        monster = new WizardMonster();
                         break;
                     }
                 }
